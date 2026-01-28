@@ -1,0 +1,16 @@
+{
+  "name": "opencode-basic-client",
+  "version": "1.0.0",
+  "description": "Minimal OpenCode client setup",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@opencode-ai/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  }
+}
