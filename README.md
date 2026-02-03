@@ -4,7 +4,7 @@
 
 ## 统计
 
-当前共 **2** 个 skill。
+当前共 **3** 个 skill。
 
 ## Skills 列表
 
@@ -12,3 +12,4 @@
 | --- | --- | --- |
 | a2a-sdk | Comprehensive Agent2Agent (A2A) JavaScript SDK skill for building A2A-compliant agents and clients. Use when implementing or integrating @a2a-js/sdk, creating A2A servers/clients, using JSON-RPC/REST/gRPC transports, streaming task updates, handling tasks/artifacts, authentication, or push notifications. | a2a-sdk/SKILL.md |
 | opencode-sdk | Comprehensive OpenCode SDK integration toolkit for client creation, session management, file operations, authentication, and real-time events. Use when Claude needs to build integrations with OpenCode server, generate SDK code, create automation scripts, or implement any functionality using the @opencode-ai/sdk package. Includes code generators, API reference, templates, and examples for all SDK workflows. | opencode-sdk/SKILL.md |
+| pwn-exploit | Comprehensive binary exploitation techniques covering stack overflow, format string, heap exploitation, integer overflow, and advanced exploitation methods. Use when working on CTF challenges, binary vulnerability analysis, exploit development, or debugging memory corruption vulnerabilities in Linux binaries (x86/x64). | pwn-exploit/SKILL.md |
