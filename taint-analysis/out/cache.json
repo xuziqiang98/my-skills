@@ -1,0 +1,1645 @@
+{
+  "version": 1,
+  "generated_at": "2026-02-28T16:06:20+08:00",
+  "params_signature": {
+    "repo_root": "/Users/xuziqiang/Workspace/my-skills/taint-analysis",
+    "focus_paths": [],
+    "kinds": [
+      "cmd",
+      "path",
+      "query",
+      "template",
+      "ssrf",
+      "deser",
+      "memory",
+      "authz"
+    ],
+    "depth": 2,
+    "budget": 200
+  },
+  "file_state": {
+    "scripts/run_taint_audit.py": {
+      "mtime": 1772265838.4932973,
+      "size": 49030,
+      "sha1": "63d71e1258c271a7decee832794322f31930c995"
+    },
+    "scripts/sink_scan.py": {
+      "mtime": 1772265853.1604626,
+      "size": 9743,
+      "sha1": "c213b642c4299ff31c36896d0607038ad1c5af1c"
+    },
+    "scripts/entry_scan.py": {
+      "mtime": 1772265550.240381,
+      "size": 9250,
+      "sha1": "50ce750778f44708c9941584d7e09cbe7ddadbd5"
+    }
+  },
+  "artifacts": {
+    "entries_data": {
+      "generated_at": "2026-02-28T16:06:20+08:00",
+      "repo_root": "/Users/xuziqiang/Workspace/my-skills/taint-analysis",
+      "output": "/Users/xuziqiang/Workspace/my-skills/taint-analysis/out/entries.md",
+      "scan_scope": [
+        "/Users/xuziqiang/Workspace/my-skills/taint-analysis"
+      ],
+      "scanned_files": 3,
+      "budget": 200,
+      "categories": [
+        {
+          "id": "main",
+          "title": "main 入口",
+          "count": 3,
+          "hits": [
+            {
+              "file": "scripts/run_taint_audit.py",
+              "line": 1278,
+              "snippet": "if __name__ == \"__main__\":",
+              "category": "main",
+              "title": "main 入口"
+            },
+            {
+              "file": "scripts/sink_scan.py",
+              "line": 262,
+              "snippet": "if __name__ == \"__main__\":",
+              "category": "main",
+              "title": "main 入口"
+            },
+            {
+              "file": "scripts/entry_scan.py",
+              "line": 257,
+              "snippet": "if __name__ == \"__main__\":",
+              "category": "main",
+              "title": "main 入口"
+            }
+          ]
+        },
+        {
+          "id": "http",
+          "title": "Web handler/router 注册",
+          "count": 0,
+          "hits": []
+        },
+        {
+          "id": "rpc",
+          "title": "RPC service 注册",
+          "count": 2,
+          "hits": [
+            {
+              "file": "scripts/run_taint_audit.py",
+              "line": 83,
+              "snippet": "(\"rpc_input\", re.compile(r\"\\b(request\\s*\\*?\\w+Request|grpc\\.|thrift|protobuf|rpc\\.Call)\")),",
+              "category": "rpc",
+              "title": "RPC service 注册"
+            },
+            {
+              "file": "scripts/entry_scan.py",
+              "line": 75,
+              "snippet": "Rule(\"rpc\", \"RPC service 注册\", re.compile(r\"\\bgrpc\\.NewServer\\s*\\(|\\bRegister\\w*Server\\s*\\(|\\brpc\\.Register\\s*\\(|\\bthrift\\b|@GrpcService\\b|\\bprotobuf\\b\")),",
+              "category": "rpc",
+              "title": "RPC service 注册"
+            }
+          ]
+        },
+        {
+          "id": "mq",
+          "title": "MQ consumer/callback",
+          "count": 2,
+          "hits": [
+            {
+              "file": "scripts/run_taint_audit.py",
+              "line": 84,
+              "snippet": "(\"mq_input\", re.compile(r\"\\b(message|msg|payload|consumer|subscribe|consume|event)\\b\", re.IGNORECASE)),",
+              "category": "mq",
+              "title": "MQ consumer/callback"
+            },
+            {
+              "file": "scripts/entry_scan.py",
+              "line": 76,
+              "snippet": "Rule(\"mq\", \"MQ consumer/callback\", re.compile(r\"\\b(subscribe|consume|on_message|onMessage|RabbitListener|KafkaListener)\\b|\\bamqp\\.Channel\\.Consume\\s*\\(|\\bkafka\\.(Consumer|Reader)\\b",
+              "category": "mq",
+              "title": "MQ consumer/callback"
+            }
+          ]
+        },
+        {
+          "id": "cli",
+          "title": "CLI flag/参数入口",
+          "count": 4,
+          "hits": [
+            {
+              "file": "scripts/run_taint_audit.py",
+              "line": 1078,
+              "snippet": "parser = argparse.ArgumentParser(description=\"通用静态污点审计统一入口\")",
+              "category": "cli",
+              "title": "CLI flag/参数入口"
+            },
+            {
+              "file": "scripts/sink_scan.py",
+              "line": 213,
+              "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")",
+              "category": "cli",
+              "title": "CLI flag/参数入口"
+            },
+            {
+              "file": "scripts/entry_scan.py",
+              "line": 77,
+              "snippet": "Rule(\"cli\", \"CLI flag/参数入口\", re.compile(r\"\\b(argparse\\.ArgumentParser|click\\.(command|option)|cobra\\.Command|urfave/cli|flag\\.(String|Int|Bool)|commander\\.)\\b\")),",
+              "category": "cli",
+              "title": "CLI flag/参数入口"
+            },
+            {
+              "file": "scripts/entry_scan.py",
+              "line": 209,
+              "snippet": "parser = argparse.ArgumentParser(description=\"入口点快速扫描（只读）\")",
+              "category": "cli",
+              "title": "CLI flag/参数入口"
+            }
+          ]
+        },
+        {
+          "id": "env_cfg",
+          "title": "环境变量/配置加载",
+          "count": 2,
+          "hits": [
+            {
+              "file": "scripts/run_taint_audit.py",
+              "line": 86,
+              "snippet": "(\"env_input\", re.compile(r\"\\b(getenv\\s*\\(|os\\.environ|process\\.env|dotenv|viper\\.Get)\")),",
+              "category": "env_cfg",
+              "title": "环境变量/配置加载"
+            },
+            {
+              "file": "scripts/entry_scan.py",
+              "line": 78,
+              "snippet": "Rule(\"env_cfg\", \"环境变量/配置加载\", re.compile(r\"\\b(os\\.environ|getenv\\s*\\(|process\\.env|dotenv|viper\\.Get\\w*\\(|config\\.(get|load)|yaml\\.(safe_)?load\\s*\\(|toml\\.load\\s*\\(|json\\.load\\s*\\()",
+              "category": "env_cfg",
+              "title": "环境变量/配置加载"
+            }
+          ]
+        },
+        {
+          "id": "file_parse",
+          "title": "文件解析入口",
+          "count": 4,
+          "hits": [
+            {
+              "file": "scripts/run_taint_audit.py",
+              "line": 87,
+              "snippet": "(\"file_input\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes)|yaml\\.load|json\\.load|xml\\.)\")),",
+              "category": "file_parse",
+              "title": "文件解析入口"
+            },
+            {
+              "file": "scripts/run_taint_audit.py",
+              "line": 218,
+              "snippet": "chunk = f.read(1024 * 1024)",
+              "category": "file_parse",
+              "title": "文件解析入口"
+            },
+            {
+              "file": "scripts/run_taint_audit.py",
+              "line": 242,
+              "snippet": "return json.loads(path.read_text(encoding=\"utf-8\"))",
+              "category": "file_parse",
+              "title": "文件解析入口"
+            },
+            {
+              "file": "scripts/entry_scan.py",
+              "line": 79,
+              "snippet": "Rule(\"file_parse\", \"文件解析入口\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes))\\b|\\b(json\\.loads|yaml\\.(safe_)?load|xml\\.|p",
+              "category": "file_parse",
+              "title": "文件解析入口"
+            }
+          ]
+        }
+      ],
+      "total_hits": 17,
+      "limitations": "启发式规则扫描；动态分发、模板展开与反射场景可能漏报。"
+    },
+    "sinks_data": {
+      "generated_at": "2026-02-28T16:06:20+08:00",
+      "repo_root": "/Users/xuziqiang/Workspace/my-skills/taint-analysis",
+      "output": "/Users/xuziqiang/Workspace/my-skills/taint-analysis/out/sinks.md",
+      "scan_scope": [
+        "/Users/xuziqiang/Workspace/my-skills/taint-analysis"
+      ],
+      "scanned_files": 3,
+      "budget": 200,
+      "categories": [
+        {
+          "id": "exec",
+          "title": "命令执行 / 进程启动",
+          "severity": "high",
+          "count": 1,
+          "hits": [
+            {
+              "file": "scripts/run_taint_audit.py",
+              "line": 275,
+              "snippet": "proc = subprocess.run(cmd, capture_output=True, text=True)",
+              "category": "exec",
+              "title": "命令执行 / 进程启动",
+              "severity": "high"
+            }
+          ]
+        },
+        {
+          "id": "eval",
+          "title": "动态执行 / eval",
+          "severity": "high",
+          "count": 1,
+          "hits": [
+            {
+              "file": "scripts/sink_scan.py",
+              "line": 75,
+              "snippet": "Rule(\"eval\", \"动态执行 / eval\", \"high\", re.compile(r\"\\b(eval\\s*\\(|exec\\s*\\(|new\\s+Function\\s*\\(|vm\\.runIn\\w+\\s*\\(|ScriptEngineManager\\b)\")),",
+              "category": "eval",
+              "title": "动态执行 / eval",
+              "severity": "high"
+            }
+          ]
+        },
+        {
+          "id": "template",
+          "title": "模板渲染",
+          "severity": "medium",
+          "count": 1,
+          "hits": [
+            {
+              "file": "scripts/sink_scan.py",
+              "line": 76,
+              "snippet": "Rule(\"template\", \"模板渲染\", \"medium\", re.compile(r\"\\b(render_template_string|jinja2\\.Template|Mustache\\.render|handlebars\\.compile|template\\.Execute|Thymeleaf|freemarker)\\b\", re.IGNOR",
+              "category": "template",
+              "title": "模板渲染",
+              "severity": "medium"
+            }
+          ]
+        },
+        {
+          "id": "sql",
+          "title": "SQL 原生拼接/执行",
+          "severity": "high",
+          "count": 1,
+          "hits": [
+            {
+              "file": "scripts/sink_scan.py",
+              "line": 77,
+              "snippet": "Rule(\"sql\", \"SQL 原生拼接/执行\", \"high\", re.compile(r\"\\b(cursor\\.execute|db\\.query|db\\.exec|sequelize\\.query|createNativeQuery|Statement\\.execute(Query)?|Raw\\s*\\()\\b\", re.IGNORECASE)),",
+              "category": "sql",
+              "title": "SQL 原生拼接/执行",
+              "severity": "high"
+            }
+          ]
+        },
+        {
+          "id": "deser",
+          "title": "反序列化",
+          "severity": "high",
+          "count": 2,
+          "hits": [
+            {
+              "file": "scripts/run_taint_audit.py",
+              "line": 88,
+              "snippet": "(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),",
+              "category": "deser",
+              "title": "反序列化",
+              "severity": "high"
+            },
+            {
+              "file": "scripts/sink_scan.py",
+              "line": 78,
+              "snippet": "Rule(\"deser\", \"反序列化\", \"high\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load\\s*\\(|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder|serde_json::from_(str|slice)|jsonpickle\\.decode)\\b\")),",
+              "category": "deser",
+              "title": "反序列化",
+              "severity": "high"
+            }
+          ]
+        },
+        {
+          "id": "file_write",
+          "title": "文件写入/路径拼接",
+          "severity": "medium",
+          "count": 1,
+          "hits": [
+            {
+              "file": "scripts/sink_scan.py",
+              "line": 79,
+              "snippet": "Rule(\"file_write\", \"文件写入/路径拼接\", \"medium\", re.compile(r\"\\b(open\\s*\\([^\\n]*[\\\"']w|fs\\.writeFile|ioutil\\.WriteFile|Files\\.write|FileOutputStream|path\\.join|os\\.path\\.join|filepath\\.Jo",
+              "category": "file_write",
+              "title": "文件写入/路径拼接",
+              "severity": "medium"
+            }
+          ]
+        },
+        {
+          "id": "network",
+          "title": "外联请求/网络发起",
+          "severity": "medium",
+          "count": 0,
+          "hits": []
+        },
+        {
+          "id": "memory",
+          "title": "格式化与内存边界",
+          "severity": "high",
+          "count": 0,
+          "hits": []
+        },
+        {
+          "id": "dangerous_cfg",
+          "title": "危险配置",
+          "severity": "medium",
+          "count": 1,
+          "hits": [
+            {
+              "file": "scripts/sink_scan.py",
+              "line": 82,
+              "snippet": "Rule(\"dangerous_cfg\", \"危险配置\", \"medium\", re.compile(r\"\\b(verify\\s*=\\s*False|InsecureSkipVerify\\s*:\\s*true|allow_origins\\s*=\\s*\\[?['\\\"]\\*['\\\"]\\]?|disable_auth|skip_auth|permitAll\\s*\\",
+              "category": "dangerous_cfg",
+              "title": "危险配置",
+              "severity": "medium"
+            }
+          ]
+        }
+      ],
+      "total_hits": 8,
+      "limitations": "启发式关键词扫描，需结合上下文做真实性判定。"
+    },
+    "backward_flows": [
+      {
+        "flow_id": "BWD-0001",
+        "kind": "deser",
+        "severity": "high",
+        "sink": {
+          "file": "scripts/run_taint_audit.py",
+          "line": 88,
+          "snippet": "(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),",
+          "category": "deser",
+          "title": "反序列化",
+          "severity": "high"
+        },
+        "source": {
+          "file": "scripts/run_taint_audit.py",
+          "line": 87,
+          "snippet": "(\"file_input\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes)|yaml\\.load|json\\.load|xml\\.)\")),",
+          "category": "file_parse",
+          "title": "文件解析入口"
+        },
+        "function_stack": [
+          "scripts/run_taint_audit.py:<global>:88"
+        ],
+        "variable_chain": [
+          "load",
+          "compile",
+          "yaml"
+        ],
+        "guards": [],
+        "sanitizers": [
+          "L92: re.compile(r\"\\b(escape|sanitize|validate|clean|safe_\\w+|quote|encodeURIComponent|html\\.EscapeString|xss\\.Escape)\\b\", re.IGNORECASE),",
+          "L93: re.compile(r\"\\b(realpath|normpath|filepath\\.Clean|path\\.normalize|canonicalize)\\b\", re.IGNORECASE),",
+          "L94: re.compile(r\"\\b(preparedStatement|parameterized|bindParam|QueryBuilder|allowlist|whitelist|regex)\\b\", re.IGNORECASE),"
+        ],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/run_taint_audit.py",
+            "line": 88,
+            "snippet": "(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/run_taint_audit.py",
+            "line": 87,
+            "snippet": "(\"file_input\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes)|yaml\\.load|json\\.load|xml\\.)\")),"
+          }
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。",
+          "检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。"
+        ]
+      },
+      {
+        "flow_id": "BWD-0002",
+        "kind": "cmd",
+        "severity": "high",
+        "sink": {
+          "file": "scripts/run_taint_audit.py",
+          "line": 275,
+          "snippet": "proc = subprocess.run(cmd, capture_output=True, text=True)",
+          "category": "exec",
+          "title": "命令执行 / 进程启动",
+          "severity": "high"
+        },
+        "source": {
+          "file": "scripts/run_taint_audit.py",
+          "line": 242,
+          "snippet": "return json.loads(path.read_text(encoding=\"utf-8\"))",
+          "category": "file_parse",
+          "title": "文件解析入口"
+        },
+        "function_stack": [
+          "scripts/run_taint_audit.py:run_child_script:275",
+          "scripts/run_taint_audit.py:<callsite>:273",
+          "scripts/run_taint_audit.py:<callsite>:1189"
+        ],
+        "variable_chain": [
+          "cmd",
+          "run",
+          "text",
+          "proc"
+        ],
+        "guards": [],
+        "sanitizers": [],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/run_taint_audit.py",
+            "line": 275,
+            "snippet": "proc = subprocess.run(cmd, capture_output=True, text=True)"
+          },
+          {
+            "role": "source",
+            "file": "scripts/run_taint_audit.py",
+            "line": 242,
+            "snippet": "return json.loads(path.read_text(encoding=\"utf-8\"))"
+          },
+          {
+            "role": "call",
+            "file": "scripts/run_taint_audit.py",
+            "line": 273,
+            "snippet": "def run_child_script(script: Path, argv: List[str], verbose: bool = False) -> None:"
+          },
+          {
+            "role": "call",
+            "file": "scripts/run_taint_audit.py",
+            "line": 1189,
+            "snippet": "run_child_script(entry_script, entry_argv, verbose=args.verbose)"
+          }
+        ],
+        "notes": []
+      },
+      {
+        "flow_id": "BWD-0003",
+        "kind": "cmd",
+        "severity": "high",
+        "sink": {
+          "file": "scripts/sink_scan.py",
+          "line": 75,
+          "snippet": "Rule(\"eval\", \"动态执行 / eval\", \"high\", re.compile(r\"\\b(eval\\s*\\(|exec\\s*\\(|new\\s+Function\\s*\\(|vm\\.runIn\\w+\\s*\\(|ScriptEngineManager\\b)\")),",
+          "category": "eval",
+          "title": "动态执行 / eval",
+          "severity": "high"
+        },
+        "source": {
+          "file": "scripts/sink_scan.py",
+          "line": 213,
+          "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")",
+          "category": "cli",
+          "title": "CLI flag/参数入口"
+        },
+        "function_stack": [
+          "scripts/sink_scan.py:<global>:75"
+        ],
+        "variable_chain": [
+          "compile",
+          "runIn",
+          "Function",
+          "Rule"
+        ],
+        "guards": [],
+        "sanitizers": [
+          "L70: regex: re.Pattern[str]"
+        ],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/sink_scan.py",
+            "line": 75,
+            "snippet": "Rule(\"eval\", \"动态执行 / eval\", \"high\", re.compile(r\"\\b(eval\\s*\\(|exec\\s*\\(|new\\s+Function\\s*\\(|vm\\.runIn\\w+\\s*\\(|ScriptEngineManager\\b)\")),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/sink_scan.py",
+            "line": 213,
+            "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")"
+          }
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。",
+          "检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。"
+        ]
+      },
+      {
+        "flow_id": "BWD-0004",
+        "kind": "query",
+        "severity": "high",
+        "sink": {
+          "file": "scripts/sink_scan.py",
+          "line": 77,
+          "snippet": "Rule(\"sql\", \"SQL 原生拼接/执行\", \"high\", re.compile(r\"\\b(cursor\\.execute|db\\.query|db\\.exec|sequelize\\.query|createNativeQuery|Statement\\.execute(Query)?|Raw\\s*\\()\\b\", re.IGNORECASE)),",
+          "category": "sql",
+          "title": "SQL 原生拼接/执行",
+          "severity": "high"
+        },
+        "source": {
+          "file": "scripts/sink_scan.py",
+          "line": 213,
+          "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")",
+          "category": "cli",
+          "title": "CLI flag/参数入口"
+        },
+        "function_stack": [
+          "scripts/sink_scan.py:<global>:77"
+        ],
+        "variable_chain": [
+          "query",
+          "IGNORECASE",
+          "SQL",
+          "compile"
+        ],
+        "guards": [],
+        "sanitizers": [
+          "L70: regex: re.Pattern[str]"
+        ],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/sink_scan.py",
+            "line": 77,
+            "snippet": "Rule(\"sql\", \"SQL 原生拼接/执行\", \"high\", re.compile(r\"\\b(cursor\\.execute|db\\.query|db\\.exec|sequelize\\.query|createNativeQuery|Statement\\.execute(Query)?|Raw\\s*\\()\\b\", re.IGNORECASE)),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/sink_scan.py",
+            "line": 213,
+            "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")"
+          }
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。",
+          "检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。"
+        ]
+      },
+      {
+        "flow_id": "BWD-0005",
+        "kind": "deser",
+        "severity": "high",
+        "sink": {
+          "file": "scripts/sink_scan.py",
+          "line": 78,
+          "snippet": "Rule(\"deser\", \"反序列化\", \"high\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load\\s*\\(|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder|serde_json::from_(str|slice)|jsonpickle\\.decode)\\b\")),",
+          "category": "deser",
+          "title": "反序列化",
+          "severity": "high"
+        },
+        "source": {
+          "file": "scripts/sink_scan.py",
+          "line": 213,
+          "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")",
+          "category": "cli",
+          "title": "CLI flag/参数入口"
+        },
+        "function_stack": [
+          "scripts/sink_scan.py:<global>:78"
+        ],
+        "variable_chain": [
+          "load",
+          "ObjectInputStream",
+          "deser",
+          "compile"
+        ],
+        "guards": [],
+        "sanitizers": [
+          "L70: regex: re.Pattern[str]"
+        ],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/sink_scan.py",
+            "line": 78,
+            "snippet": "Rule(\"deser\", \"反序列化\", \"high\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load\\s*\\(|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder|serde_json::from_(str|slice)|jsonpickle\\.decode)\\b\")),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/sink_scan.py",
+            "line": 213,
+            "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")"
+          }
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。",
+          "检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。"
+        ]
+      },
+      {
+        "flow_id": "BWD-0006",
+        "kind": "template",
+        "severity": "medium",
+        "sink": {
+          "file": "scripts/sink_scan.py",
+          "line": 76,
+          "snippet": "Rule(\"template\", \"模板渲染\", \"medium\", re.compile(r\"\\b(render_template_string|jinja2\\.Template|Mustache\\.render|handlebars\\.compile|template\\.Execute|Thymeleaf|freemarker)\\b\", re.IGNOR",
+          "category": "template",
+          "title": "模板渲染",
+          "severity": "medium"
+        },
+        "source": {
+          "file": "scripts/sink_scan.py",
+          "line": 213,
+          "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")",
+          "category": "cli",
+          "title": "CLI flag/参数入口"
+        },
+        "function_stack": [
+          "scripts/sink_scan.py:<global>:76"
+        ],
+        "variable_chain": [
+          "Mustache",
+          "IGNORECASE",
+          "compile",
+          "medium"
+        ],
+        "guards": [],
+        "sanitizers": [
+          "L70: regex: re.Pattern[str]"
+        ],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/sink_scan.py",
+            "line": 76,
+            "snippet": "Rule(\"template\", \"模板渲染\", \"medium\", re.compile(r\"\\b(render_template_string|jinja2\\.Template|Mustache\\.render|handlebars\\.compile|template\\.Execute|Thymeleaf|freemarker)\\b\", re.IGNORECASE)),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/sink_scan.py",
+            "line": 213,
+            "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")"
+          }
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。",
+          "检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。"
+        ]
+      },
+      {
+        "flow_id": "BWD-0007",
+        "kind": "path",
+        "severity": "medium",
+        "sink": {
+          "file": "scripts/sink_scan.py",
+          "line": 79,
+          "snippet": "Rule(\"file_write\", \"文件写入/路径拼接\", \"medium\", re.compile(r\"\\b(open\\s*\\([^\\n]*[\\\"']w|fs\\.writeFile|ioutil\\.WriteFile|Files\\.write|FileOutputStream|path\\.join|os\\.path\\.join|filepath\\.Jo",
+          "category": "file_write",
+          "title": "文件写入/路径拼接",
+          "severity": "medium"
+        },
+        "source": {
+          "file": "scripts/sink_scan.py",
+          "line": 213,
+          "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")",
+          "category": "cli",
+          "title": "CLI flag/参数入口"
+        },
+        "function_stack": [
+          "scripts/sink_scan.py:<global>:79"
+        ],
+        "variable_chain": [
+          "path",
+          "WriteFile",
+          "ioutil",
+          "IGNORECASE"
+        ],
+        "guards": [],
+        "sanitizers": [],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/sink_scan.py",
+            "line": 79,
+            "snippet": "Rule(\"file_write\", \"文件写入/路径拼接\", \"medium\", re.compile(r\"\\b(open\\s*\\([^\\n]*[\\\"']w|fs\\.writeFile|ioutil\\.WriteFile|Files\\.write|FileOutputStream|path\\.join|os\\.path\\.join|filepath\\.Join)\\b\", re.IGNORECASE)),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/sink_scan.py",
+            "line": 213,
+            "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")"
+          }
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。"
+        ]
+      },
+      {
+        "flow_id": "BWD-0008",
+        "kind": "authz",
+        "severity": "medium",
+        "sink": {
+          "file": "scripts/sink_scan.py",
+          "line": 82,
+          "snippet": "Rule(\"dangerous_cfg\", \"危险配置\", \"medium\", re.compile(r\"\\b(verify\\s*=\\s*False|InsecureSkipVerify\\s*:\\s*true|allow_origins\\s*=\\s*\\[?['\\\"]\\*['\\\"]\\]?|disable_auth|skip_auth|permitAll\\s*\\",
+          "category": "dangerous_cfg",
+          "title": "危险配置",
+          "severity": "medium"
+        },
+        "source": {
+          "file": "scripts/sink_scan.py",
+          "line": 213,
+          "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")",
+          "category": "cli",
+          "title": "CLI flag/参数入口"
+        },
+        "function_stack": [
+          "scripts/sink_scan.py:<global>:82"
+        ],
+        "variable_chain": [
+          "IGNORECASE",
+          "InsecureSkipVerify",
+          "compile",
+          "allow_origins"
+        ],
+        "guards": [],
+        "sanitizers": [],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/sink_scan.py",
+            "line": 82,
+            "snippet": "Rule(\"dangerous_cfg\", \"危险配置\", \"medium\", re.compile(r\"\\b(verify\\s*=\\s*False|InsecureSkipVerify\\s*:\\s*true|allow_origins\\s*=\\s*\\[?['\\\"]\\*['\\\"]\\]?|disable_auth|skip_auth|permitAll\\s*\\()\", re.IGNORECASE)),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/sink_scan.py",
+            "line": 213,
+            "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")"
+          }
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。"
+        ]
+      }
+    ],
+    "forward_flows": [
+      {
+        "flow_id": "FWD-0001",
+        "source": {
+          "file": "scripts/run_taint_audit.py",
+          "line": 1278,
+          "snippet": "if __name__ == \"__main__\":",
+          "category": "main",
+          "title": "main 入口"
+        },
+        "candidate_sinks": [],
+        "unknown_risky_calls": [
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 1279,
+            "snippet": "raise SystemExit(main())"
+          }
+        ],
+        "notes": [
+          "正向追踪基于同文件窗口与风险调用关键词，主要用于补漏与发现未知 sink。"
+        ]
+      },
+      {
+        "flow_id": "FWD-0002",
+        "source": {
+          "file": "scripts/run_taint_audit.py",
+          "line": 83,
+          "snippet": "(\"rpc_input\", re.compile(r\"\\b(request\\s*\\*?\\w+Request|grpc\\.|thrift|protobuf|rpc\\.Call)\")),",
+          "category": "rpc",
+          "title": "RPC service 注册"
+        },
+        "candidate_sinks": [
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 275,
+            "snippet": "proc = subprocess.run(cmd, capture_output=True, text=True)",
+            "category": "exec",
+            "title": "命令执行 / 进程启动",
+            "severity": "high"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 88,
+            "snippet": "(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),",
+            "category": "deser",
+            "title": "反序列化",
+            "severity": "high"
+          }
+        ],
+        "unknown_risky_calls": [
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 216,
+            "snippet": "with path.open(\"rb\") as f:"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 241,
+            "snippet": "def load_json(path: Path) -> dict:"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 242,
+            "snippet": "return json.loads(path.read_text(encoding=\"utf-8\"))"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 247,
+            "snippet": "path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding=\"utf-8\")"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 250,
+            "snippet": "def load_cache(path: Path) -> dict:"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 254,
+            "snippet": "return load_json(path)"
+          }
+        ],
+        "notes": [
+          "正向追踪基于同文件窗口与风险调用关键词，主要用于补漏与发现未知 sink。"
+        ]
+      },
+      {
+        "flow_id": "FWD-0003",
+        "source": {
+          "file": "scripts/run_taint_audit.py",
+          "line": 84,
+          "snippet": "(\"mq_input\", re.compile(r\"\\b(message|msg|payload|consumer|subscribe|consume|event)\\b\", re.IGNORECASE)),",
+          "category": "mq",
+          "title": "MQ consumer/callback"
+        },
+        "candidate_sinks": [
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 275,
+            "snippet": "proc = subprocess.run(cmd, capture_output=True, text=True)",
+            "category": "exec",
+            "title": "命令执行 / 进程启动",
+            "severity": "high"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 88,
+            "snippet": "(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),",
+            "category": "deser",
+            "title": "反序列化",
+            "severity": "high"
+          }
+        ],
+        "unknown_risky_calls": [
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 216,
+            "snippet": "with path.open(\"rb\") as f:"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 241,
+            "snippet": "def load_json(path: Path) -> dict:"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 242,
+            "snippet": "return json.loads(path.read_text(encoding=\"utf-8\"))"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 247,
+            "snippet": "path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding=\"utf-8\")"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 250,
+            "snippet": "def load_cache(path: Path) -> dict:"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 254,
+            "snippet": "return load_json(path)"
+          }
+        ],
+        "notes": [
+          "正向追踪基于同文件窗口与风险调用关键词，主要用于补漏与发现未知 sink。"
+        ]
+      },
+      {
+        "flow_id": "FWD-0004",
+        "source": {
+          "file": "scripts/run_taint_audit.py",
+          "line": 1078,
+          "snippet": "parser = argparse.ArgumentParser(description=\"通用静态污点审计统一入口\")",
+          "category": "cli",
+          "title": "CLI flag/参数入口"
+        },
+        "candidate_sinks": [],
+        "unknown_risky_calls": [
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 1127,
+            "snippet": "cache = {} if args.no_cache else load_cache(cache_path)"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 1153,
+            "snippet": "write_text(output_dir / \"entries.md\", entries_md_text)"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 1154,
+            "snippet": "write_text(output_dir / \"sinks.md\", sinks_md_text)"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 1155,
+            "snippet": "write_text(output_dir / \"taint_policy.md\", taint_policy_text)"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 1156,
+            "snippet": "write_text(output_dir / \"flows_backward.md\", flows_backward_text)"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 1157,
+            "snippet": "write_text(output_dir / \"flows_forward.md\", flows_forward_text)"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 1158,
+            "snippet": "write_text(output_dir / \"authz_model.md\", authz_model_text)"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 1159,
+            "snippet": "write_text(output_dir / \"findings.md\", findings_text)"
+          }
+        ],
+        "notes": [
+          "正向追踪基于同文件窗口与风险调用关键词，主要用于补漏与发现未知 sink。"
+        ]
+      },
+      {
+        "flow_id": "FWD-0005",
+        "source": {
+          "file": "scripts/run_taint_audit.py",
+          "line": 86,
+          "snippet": "(\"env_input\", re.compile(r\"\\b(getenv\\s*\\(|os\\.environ|process\\.env|dotenv|viper\\.Get)\")),",
+          "category": "env_cfg",
+          "title": "环境变量/配置加载"
+        },
+        "candidate_sinks": [
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 275,
+            "snippet": "proc = subprocess.run(cmd, capture_output=True, text=True)",
+            "category": "exec",
+            "title": "命令执行 / 进程启动",
+            "severity": "high"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 88,
+            "snippet": "(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),",
+            "category": "deser",
+            "title": "反序列化",
+            "severity": "high"
+          }
+        ],
+        "unknown_risky_calls": [
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 216,
+            "snippet": "with path.open(\"rb\") as f:"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 241,
+            "snippet": "def load_json(path: Path) -> dict:"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 242,
+            "snippet": "return json.loads(path.read_text(encoding=\"utf-8\"))"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 247,
+            "snippet": "path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding=\"utf-8\")"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 250,
+            "snippet": "def load_cache(path: Path) -> dict:"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 254,
+            "snippet": "return load_json(path)"
+          }
+        ],
+        "notes": [
+          "正向追踪基于同文件窗口与风险调用关键词，主要用于补漏与发现未知 sink。"
+        ]
+      },
+      {
+        "flow_id": "FWD-0006",
+        "source": {
+          "file": "scripts/run_taint_audit.py",
+          "line": 87,
+          "snippet": "(\"file_input\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes)|yaml\\.load|json\\.load|xml\\.)\")),",
+          "category": "file_parse",
+          "title": "文件解析入口"
+        },
+        "candidate_sinks": [
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 275,
+            "snippet": "proc = subprocess.run(cmd, capture_output=True, text=True)",
+            "category": "exec",
+            "title": "命令执行 / 进程启动",
+            "severity": "high"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 88,
+            "snippet": "(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),",
+            "category": "deser",
+            "title": "反序列化",
+            "severity": "high"
+          }
+        ],
+        "unknown_risky_calls": [
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 216,
+            "snippet": "with path.open(\"rb\") as f:"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 241,
+            "snippet": "def load_json(path: Path) -> dict:"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 242,
+            "snippet": "return json.loads(path.read_text(encoding=\"utf-8\"))"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 247,
+            "snippet": "path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding=\"utf-8\")"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 250,
+            "snippet": "def load_cache(path: Path) -> dict:"
+          },
+          {
+            "file": "scripts/run_taint_audit.py",
+            "line": 254,
+            "snippet": "return load_json(path)"
+          }
+        ],
+        "notes": [
+          "正向追踪基于同文件窗口与风险调用关键词，主要用于补漏与发现未知 sink。"
+        ]
+      }
+    ],
+    "authz_model": {
+      "generated_at": "2026-02-28T16:06:20+08:00",
+      "hits": [
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 98,
+          "snippet": "re.compile(r\"\\b(if\\s+.*(auth|authorize|permission|permit|role|tenant|owner|rbac|abac)|check\\w*\\(|require\\w*\\()\", re.IGNORECASE),"
+        },
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 99,
+          "snippet": "re.compile(r\"\\b(assert|deny|forbid|is_admin|is_owner|has_role|tenant_id)\\b\", re.IGNORECASE),"
+        },
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 103,
+          "snippet": "re.compile(r\"\\b(auth|authorize|authorization|permission|permit|deny|rbac|abac|policy)\\b\", re.IGNORECASE),"
+        },
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 104,
+          "snippet": "re.compile(r\"\\b(owner|tenant|tenant_id|org_id|account_id|scope|principal|subject)\\b\", re.IGNORECASE),"
+        },
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 558,
+          "snippet": "for kw in [\"auth\", \"permission\", \"permit\", \"owner\", \"tenant\", \"role\", \"policy\"]:"
+        },
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 762,
+          "snippet": "def header_block(title: str, params: dict, scope: Sequence[str], limitations: str) -> List[str]:"
+        },
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 768,
+          "snippet": "f\"- 扫描范围: {', '.join(scope) if scope else '<repo-root>'}\","
+        },
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 1035,
+          "snippet": "lines.append(\"4. 对 Possible 项做定向人工复核，更新 taint policy 与误报抑制规则。\")"
+        },
+        {
+          "file": "scripts/sink_scan.py",
+          "line": 182,
+          "snippet": "scope = [str(p.relative_to(repo_root)) if p.is_relative_to(repo_root) else str(p) for p in focus_paths] if focus_paths else [\"<repo-root>\"]"
+        },
+        {
+          "file": "scripts/sink_scan.py",
+          "line": 190,
+          "snippet": "lines.append(f\"- 扫描范围: {', '.join(scope)}\")"
+        },
+        {
+          "file": "scripts/entry_scan.py",
+          "line": 178,
+          "snippet": "scope = [str(p.relative_to(repo_root)) if p.is_relative_to(repo_root) else str(p) for p in focus_paths] if focus_paths else [\"<repo-root>\"]"
+        },
+        {
+          "file": "scripts/entry_scan.py",
+          "line": 186,
+          "snippet": "lines.append(f\"- 扫描范围: {', '.join(scope)}\")"
+        }
+      ],
+      "summary": {
+        "files_scanned": 3,
+        "hits": 12,
+        "keywords": {
+          "auth": 3,
+          "permission": 3,
+          "permit": 3,
+          "owner": 4,
+          "tenant": 4,
+          "role": 3,
+          "policy": 3
+        }
+      }
+    },
+    "findings": [
+      {
+        "id": "F-002",
+        "title": "命令执行 / 进程启动 潜在污点传播 (cmd)",
+        "severity": "critical",
+        "status": "Confirmed",
+        "evidence_score": 100,
+        "source": "scripts/run_taint_audit.py:242",
+        "sink": "scripts/run_taint_audit.py:275",
+        "kind": "cmd",
+        "impact": "未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。",
+        "path": {
+          "function_stack": [
+            "scripts/run_taint_audit.py:run_child_script:275",
+            "scripts/run_taint_audit.py:<callsite>:273",
+            "scripts/run_taint_audit.py:<callsite>:1189"
+          ],
+          "variable_chain": [
+            "cmd",
+            "run",
+            "text",
+            "proc"
+          ]
+        },
+        "guards": [],
+        "sanitizers": [],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/run_taint_audit.py",
+            "line": 275,
+            "snippet": "proc = subprocess.run(cmd, capture_output=True, text=True)"
+          },
+          {
+            "role": "source",
+            "file": "scripts/run_taint_audit.py",
+            "line": 242,
+            "snippet": "return json.loads(path.read_text(encoding=\"utf-8\"))"
+          },
+          {
+            "role": "call",
+            "file": "scripts/run_taint_audit.py",
+            "line": 273,
+            "snippet": "def run_child_script(script: Path, argv: List[str], verbose: bool = False) -> None:"
+          },
+          {
+            "role": "call",
+            "file": "scripts/run_taint_audit.py",
+            "line": 1189,
+            "snippet": "run_child_script(entry_script, entry_argv, verbose=args.verbose)"
+          }
+        ],
+        "score_reasoning": [
+          "高危 sink 基础分 +60",
+          "存在 source 候选 +15",
+          "存在调用栈证据 +8",
+          "变量链线索 +7",
+          "正向追踪命中同一 sink +10"
+        ],
+        "notes": [],
+        "exploitability": "静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。",
+        "authz_gap_hint": "检测到部分 authz 语义，需核验是否覆盖当前路径",
+        "fix_hint": "优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。"
+      },
+      {
+        "id": "F-003",
+        "title": "动态执行 / eval 潜在污点传播 (cmd)",
+        "severity": "high",
+        "status": "Likely",
+        "evidence_score": 76,
+        "source": "scripts/sink_scan.py:213",
+        "sink": "scripts/sink_scan.py:75",
+        "kind": "cmd",
+        "impact": "未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。",
+        "path": {
+          "function_stack": [
+            "scripts/sink_scan.py:<global>:75"
+          ],
+          "variable_chain": [
+            "compile",
+            "runIn",
+            "Function",
+            "Rule"
+          ]
+        },
+        "guards": [],
+        "sanitizers": [
+          "L70: regex: re.Pattern[str]"
+        ],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/sink_scan.py",
+            "line": 75,
+            "snippet": "Rule(\"eval\", \"动态执行 / eval\", \"high\", re.compile(r\"\\b(eval\\s*\\(|exec\\s*\\(|new\\s+Function\\s*\\(|vm\\.runIn\\w+\\s*\\(|ScriptEngineManager\\b)\")),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/sink_scan.py",
+            "line": 213,
+            "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")"
+          }
+        ],
+        "score_reasoning": [
+          "高危 sink 基础分 +60",
+          "存在 source 候选 +15",
+          "变量链线索 +7",
+          "检测到净化器，降低可利用性"
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。",
+          "检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。"
+        ],
+        "exploitability": "静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。",
+        "authz_gap_hint": "检测到部分 authz 语义，需核验是否覆盖当前路径",
+        "fix_hint": "优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。"
+      },
+      {
+        "id": "F-004",
+        "title": "SQL 原生拼接/执行 潜在污点传播 (query)",
+        "severity": "high",
+        "status": "Likely",
+        "evidence_score": 76,
+        "source": "scripts/sink_scan.py:213",
+        "sink": "scripts/sink_scan.py:77",
+        "kind": "query",
+        "impact": "未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。",
+        "path": {
+          "function_stack": [
+            "scripts/sink_scan.py:<global>:77"
+          ],
+          "variable_chain": [
+            "query",
+            "IGNORECASE",
+            "SQL",
+            "compile"
+          ]
+        },
+        "guards": [],
+        "sanitizers": [
+          "L70: regex: re.Pattern[str]"
+        ],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/sink_scan.py",
+            "line": 77,
+            "snippet": "Rule(\"sql\", \"SQL 原生拼接/执行\", \"high\", re.compile(r\"\\b(cursor\\.execute|db\\.query|db\\.exec|sequelize\\.query|createNativeQuery|Statement\\.execute(Query)?|Raw\\s*\\()\\b\", re.IGNORECASE)),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/sink_scan.py",
+            "line": 213,
+            "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")"
+          }
+        ],
+        "score_reasoning": [
+          "高危 sink 基础分 +60",
+          "存在 source 候选 +15",
+          "变量链线索 +7",
+          "检测到净化器，降低可利用性"
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。",
+          "检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。"
+        ],
+        "exploitability": "静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。",
+        "authz_gap_hint": "检测到部分 authz 语义，需核验是否覆盖当前路径",
+        "fix_hint": "优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。"
+      },
+      {
+        "id": "F-005",
+        "title": "反序列化 潜在污点传播 (deser)",
+        "severity": "high",
+        "status": "Likely",
+        "evidence_score": 76,
+        "source": "scripts/sink_scan.py:213",
+        "sink": "scripts/sink_scan.py:78",
+        "kind": "deser",
+        "impact": "未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。",
+        "path": {
+          "function_stack": [
+            "scripts/sink_scan.py:<global>:78"
+          ],
+          "variable_chain": [
+            "load",
+            "ObjectInputStream",
+            "deser",
+            "compile"
+          ]
+        },
+        "guards": [],
+        "sanitizers": [
+          "L70: regex: re.Pattern[str]"
+        ],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/sink_scan.py",
+            "line": 78,
+            "snippet": "Rule(\"deser\", \"反序列化\", \"high\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load\\s*\\(|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder|serde_json::from_(str|slice)|jsonpickle\\.decode)\\b\")),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/sink_scan.py",
+            "line": 213,
+            "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")"
+          }
+        ],
+        "score_reasoning": [
+          "高危 sink 基础分 +60",
+          "存在 source 候选 +15",
+          "变量链线索 +7",
+          "检测到净化器，降低可利用性"
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。",
+          "检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。"
+        ],
+        "exploitability": "静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。",
+        "authz_gap_hint": "检测到部分 authz 语义，需核验是否覆盖当前路径",
+        "fix_hint": "优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。"
+      },
+      {
+        "id": "F-001",
+        "title": "反序列化 潜在污点传播 (deser)",
+        "severity": "high",
+        "status": "Likely",
+        "evidence_score": 74,
+        "source": "scripts/run_taint_audit.py:87",
+        "sink": "scripts/run_taint_audit.py:88",
+        "kind": "deser",
+        "impact": "未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。",
+        "path": {
+          "function_stack": [
+            "scripts/run_taint_audit.py:<global>:88"
+          ],
+          "variable_chain": [
+            "load",
+            "compile",
+            "yaml"
+          ]
+        },
+        "guards": [],
+        "sanitizers": [
+          "L92: re.compile(r\"\\b(escape|sanitize|validate|clean|safe_\\w+|quote|encodeURIComponent|html\\.EscapeString|xss\\.Escape)\\b\", re.IGNORECASE),",
+          "L93: re.compile(r\"\\b(realpath|normpath|filepath\\.Clean|path\\.normalize|canonicalize)\\b\", re.IGNORECASE),",
+          "L94: re.compile(r\"\\b(preparedStatement|parameterized|bindParam|QueryBuilder|allowlist|whitelist|regex)\\b\", re.IGNORECASE),"
+        ],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/run_taint_audit.py",
+            "line": 88,
+            "snippet": "(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/run_taint_audit.py",
+            "line": 87,
+            "snippet": "(\"file_input\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes)|yaml\\.load|json\\.load|xml\\.)\")),"
+          }
+        ],
+        "score_reasoning": [
+          "高危 sink 基础分 +60",
+          "存在 source 候选 +15",
+          "变量链线索 +7",
+          "正向追踪命中同一 sink +10",
+          "检测到净化器，降低可利用性"
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。",
+          "检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。"
+        ],
+        "exploitability": "静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。",
+        "authz_gap_hint": "检测到部分 authz 语义，需核验是否覆盖当前路径",
+        "fix_hint": "优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。"
+      },
+      {
+        "id": "F-007",
+        "title": "文件写入/路径拼接 潜在污点传播 (path)",
+        "severity": "medium",
+        "status": "Likely",
+        "evidence_score": 62,
+        "source": "scripts/sink_scan.py:213",
+        "sink": "scripts/sink_scan.py:79",
+        "kind": "path",
+        "impact": "未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。",
+        "path": {
+          "function_stack": [
+            "scripts/sink_scan.py:<global>:79"
+          ],
+          "variable_chain": [
+            "path",
+            "WriteFile",
+            "ioutil",
+            "IGNORECASE"
+          ]
+        },
+        "guards": [],
+        "sanitizers": [],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/sink_scan.py",
+            "line": 79,
+            "snippet": "Rule(\"file_write\", \"文件写入/路径拼接\", \"medium\", re.compile(r\"\\b(open\\s*\\([^\\n]*[\\\"']w|fs\\.writeFile|ioutil\\.WriteFile|Files\\.write|FileOutputStream|path\\.join|os\\.path\\.join|filepath\\.Join)\\b\", re.IGNORECASE)),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/sink_scan.py",
+            "line": 213,
+            "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")"
+          }
+        ],
+        "score_reasoning": [
+          "中危 sink 基础分 +40",
+          "存在 source 候选 +15",
+          "变量链线索 +7"
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。"
+        ],
+        "exploitability": "静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。",
+        "authz_gap_hint": "检测到部分 authz 语义，需核验是否覆盖当前路径",
+        "fix_hint": "优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。"
+      },
+      {
+        "id": "F-008",
+        "title": "危险配置 潜在污点传播 (authz)",
+        "severity": "medium",
+        "status": "Likely",
+        "evidence_score": 62,
+        "source": "scripts/sink_scan.py:213",
+        "sink": "scripts/sink_scan.py:82",
+        "kind": "authz",
+        "impact": "未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。",
+        "path": {
+          "function_stack": [
+            "scripts/sink_scan.py:<global>:82"
+          ],
+          "variable_chain": [
+            "IGNORECASE",
+            "InsecureSkipVerify",
+            "compile",
+            "allow_origins"
+          ]
+        },
+        "guards": [],
+        "sanitizers": [],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/sink_scan.py",
+            "line": 82,
+            "snippet": "Rule(\"dangerous_cfg\", \"危险配置\", \"medium\", re.compile(r\"\\b(verify\\s*=\\s*False|InsecureSkipVerify\\s*:\\s*true|allow_origins\\s*=\\s*\\[?['\\\"]\\*['\\\"]\\]?|disable_auth|skip_auth|permitAll\\s*\\()\", re.IGNORECASE)),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/sink_scan.py",
+            "line": 213,
+            "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")"
+          }
+        ],
+        "score_reasoning": [
+          "中危 sink 基础分 +40",
+          "存在 source 候选 +15",
+          "变量链线索 +7"
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。"
+        ],
+        "exploitability": "静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。",
+        "authz_gap_hint": "检测到部分 authz 语义，需核验是否覆盖当前路径",
+        "fix_hint": "优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。"
+      },
+      {
+        "id": "F-006",
+        "title": "模板渲染 潜在污点传播 (template)",
+        "severity": "medium",
+        "status": "Possible",
+        "evidence_score": 56,
+        "source": "scripts/sink_scan.py:213",
+        "sink": "scripts/sink_scan.py:76",
+        "kind": "template",
+        "impact": "未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。",
+        "path": {
+          "function_stack": [
+            "scripts/sink_scan.py:<global>:76"
+          ],
+          "variable_chain": [
+            "Mustache",
+            "IGNORECASE",
+            "compile",
+            "medium"
+          ]
+        },
+        "guards": [],
+        "sanitizers": [
+          "L70: regex: re.Pattern[str]"
+        ],
+        "evidence": [
+          {
+            "role": "sink",
+            "file": "scripts/sink_scan.py",
+            "line": 76,
+            "snippet": "Rule(\"template\", \"模板渲染\", \"medium\", re.compile(r\"\\b(render_template_string|jinja2\\.Template|Mustache\\.render|handlebars\\.compile|template\\.Execute|Thymeleaf|freemarker)\\b\", re.IGNORECASE)),"
+          },
+          {
+            "role": "source",
+            "file": "scripts/sink_scan.py",
+            "line": 213,
+            "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")"
+          }
+        ],
+        "score_reasoning": [
+          "中危 sink 基础分 +40",
+          "存在 source 候选 +15",
+          "变量链线索 +7",
+          "检测到净化器，降低可利用性"
+        ],
+        "notes": [
+          "未解析到明显调用者，函数栈证据以当前函数为主。",
+          "检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。"
+        ],
+        "exploitability": "静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。",
+        "authz_gap_hint": "检测到部分 authz 语义，需核验是否覆盖当前路径",
+        "fix_hint": "优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。"
+      }
+    ],
+    "attack_chains": [
+      {
+        "id": "CHAIN-01",
+        "name": "写文件 -> 加载/执行",
+        "preconditions": [
+          "攻击者可控文件名或内容",
+          "目标存在后续加载/执行路径"
+        ],
+        "steps": [
+          "利用 path 类问题写入可控内容或篡改关键文件",
+          "触发 cmd/deser/template 路径实现执行或扩展控制"
+        ],
+        "impact": "可能导致持久化控制、远程代码执行或供应链污染。"
+      }
+    ],
+    "entries_md_text": "# 入口面扫描结果 (entries)\n\n- 生成时间: 2026-02-28T16:06:20+08:00\n- repo_root: `/Users/xuziqiang/Workspace/my-skills/taint-analysis`\n- 扫描范围: <repo-root>\n- 扫描文件数: 3\n- 文件预算: 200\n- 局限说明: 基于静态正则与关键字启发式，无法完整覆盖动态路由、运行时反射与代码生成。\n\n- 命中总数: 17\n\n## main 入口 (3)\n- `scripts/run_taint_audit.py:1278` | `if __name__ == \"__main__\":`\n- `scripts/sink_scan.py:262` | `if __name__ == \"__main__\":`\n- `scripts/entry_scan.py:257` | `if __name__ == \"__main__\":`\n\n## Web handler/router 注册 (0)\n- 无命中\n\n## RPC service 注册 (2)\n- `scripts/run_taint_audit.py:83` | `(\"rpc_input\", re.compile(r\"\\b(request\\s*\\*?\\w+Request|grpc\\.|thrift|protobuf|rpc\\.Call)\")),`\n- `scripts/entry_scan.py:75` | `Rule(\"rpc\", \"RPC service 注册\", re.compile(r\"\\bgrpc\\.NewServer\\s*\\(|\\bRegister\\w*Server\\s*\\(|\\brpc\\.Register\\s*\\(|\\bthrift\\b|@GrpcService\\b|\\bprotobuf\\b\")),`\n\n## MQ consumer/callback (2)\n- `scripts/run_taint_audit.py:84` | `(\"mq_input\", re.compile(r\"\\b(message|msg|payload|consumer|subscribe|consume|event)\\b\", re.IGNORECASE)),`\n- `scripts/entry_scan.py:76` | `Rule(\"mq\", \"MQ consumer/callback\", re.compile(r\"\\b(subscribe|consume|on_message|onMessage|RabbitListener|KafkaListener)\\b|\\bamqp\\.Channel\\.Consume\\s*\\(|\\bkafka\\.(Consumer|Reader)\\b`\n\n## CLI flag/参数入口 (4)\n- `scripts/run_taint_audit.py:1078` | `parser = argparse.ArgumentParser(description=\"通用静态污点审计统一入口\")`\n- `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n- `scripts/entry_scan.py:77` | `Rule(\"cli\", \"CLI flag/参数入口\", re.compile(r\"\\b(argparse\\.ArgumentParser|click\\.(command|option)|cobra\\.Command|urfave/cli|flag\\.(String|Int|Bool)|commander\\.)\\b\")),`\n- `scripts/entry_scan.py:209` | `parser = argparse.ArgumentParser(description=\"入口点快速扫描（只读）\")`\n\n## 环境变量/配置加载 (2)\n- `scripts/run_taint_audit.py:86` | `(\"env_input\", re.compile(r\"\\b(getenv\\s*\\(|os\\.environ|process\\.env|dotenv|viper\\.Get)\")),`\n- `scripts/entry_scan.py:78` | `Rule(\"env_cfg\", \"环境变量/配置加载\", re.compile(r\"\\b(os\\.environ|getenv\\s*\\(|process\\.env|dotenv|viper\\.Get\\w*\\(|config\\.(get|load)|yaml\\.(safe_)?load\\s*\\(|toml\\.load\\s*\\(|json\\.load\\s*\\()`\n\n## 文件解析入口 (4)\n- `scripts/run_taint_audit.py:87` | `(\"file_input\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes)|yaml\\.load|json\\.load|xml\\.)\")),`\n- `scripts/run_taint_audit.py:218` | `chunk = f.read(1024 * 1024)`\n- `scripts/run_taint_audit.py:242` | `return json.loads(path.read_text(encoding=\"utf-8\"))`\n- `scripts/entry_scan.py:79` | `Rule(\"file_parse\", \"文件解析入口\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes))\\b|\\b(json\\.loads|yaml\\.(safe_)?load|xml\\.|p`\n",
+    "sinks_md_text": "# Sink 扫描结果 (sinks)\n\n- 生成时间: 2026-02-28T16:06:20+08:00\n- repo_root: `/Users/xuziqiang/Workspace/my-skills/taint-analysis`\n- 扫描范围: <repo-root>\n- 扫描文件数: 3\n- 文件预算: 200\n- 局限说明: 命中表示“可疑 sink 位置”，需结合数据流、guard、净化器再判定是否可利用。\n\n- 命中总数: 8\n\n## 命令执行 / 进程启动 [high] (1)\n- `scripts/run_taint_audit.py:275` | `proc = subprocess.run(cmd, capture_output=True, text=True)`\n\n## 动态执行 / eval [high] (1)\n- `scripts/sink_scan.py:75` | `Rule(\"eval\", \"动态执行 / eval\", \"high\", re.compile(r\"\\b(eval\\s*\\(|exec\\s*\\(|new\\s+Function\\s*\\(|vm\\.runIn\\w+\\s*\\(|ScriptEngineManager\\b)\")),`\n\n## 模板渲染 [medium] (1)\n- `scripts/sink_scan.py:76` | `Rule(\"template\", \"模板渲染\", \"medium\", re.compile(r\"\\b(render_template_string|jinja2\\.Template|Mustache\\.render|handlebars\\.compile|template\\.Execute|Thymeleaf|freemarker)\\b\", re.IGNOR`\n\n## SQL 原生拼接/执行 [high] (1)\n- `scripts/sink_scan.py:77` | `Rule(\"sql\", \"SQL 原生拼接/执行\", \"high\", re.compile(r\"\\b(cursor\\.execute|db\\.query|db\\.exec|sequelize\\.query|createNativeQuery|Statement\\.execute(Query)?|Raw\\s*\\()\\b\", re.IGNORECASE)),`\n\n## 反序列化 [high] (2)\n- `scripts/run_taint_audit.py:88` | `(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),`\n- `scripts/sink_scan.py:78` | `Rule(\"deser\", \"反序列化\", \"high\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load\\s*\\(|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder|serde_json::from_(str|slice)|jsonpickle\\.decode)\\b\")),`\n\n## 文件写入/路径拼接 [medium] (1)\n- `scripts/sink_scan.py:79` | `Rule(\"file_write\", \"文件写入/路径拼接\", \"medium\", re.compile(r\"\\b(open\\s*\\([^\\n]*[\\\"']w|fs\\.writeFile|ioutil\\.WriteFile|Files\\.write|FileOutputStream|path\\.join|os\\.path\\.join|filepath\\.Jo`\n\n## 外联请求/网络发起 [medium] (0)\n- 无命中\n\n## 格式化与内存边界 [high] (0)\n- 无命中\n\n## 危险配置 [medium] (1)\n- `scripts/sink_scan.py:82` | `Rule(\"dangerous_cfg\", \"危险配置\", \"medium\", re.compile(r\"\\b(verify\\s*=\\s*False|InsecureSkipVerify\\s*:\\s*true|allow_origins\\s*=\\s*\\[?['\\\"]\\*['\\\"]\\]?|disable_auth|skip_auth|permitAll\\s*\\`\n",
+    "taint_policy_text": "# 污点策略草案 (taint_policy)\n\n- 生成时间: 2026-02-28T16:06:20+08:00\n- 参数: `{\"repo_root\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis\", \"output_dir\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis/out\", \"focus_paths\": [\"<repo-root>\"], \"kinds\": [\"cmd\", \"path\", \"query\", \"template\", \"ssrf\", \"deser\", \"memory\", \"authz\"], \"depth\": 2, \"budget\": 200, \"cache\": true}`\n- 扫描范围: <repo-root>\n- 局限说明: 策略由启发式自动生成，需结合业务语义与代码审阅人工修订。\n\n## TaintKinds\n- 启用类型: cmd, path, query, template, ssrf, deser, memory, authz\n\n## Sources\n- main 入口: scripts/run_taint_audit.py:1278, scripts/sink_scan.py:262, scripts/entry_scan.py:257\n- RPC service 注册: scripts/run_taint_audit.py:83, scripts/entry_scan.py:75\n- MQ consumer/callback: scripts/run_taint_audit.py:84, scripts/entry_scan.py:76\n- CLI flag/参数入口: scripts/run_taint_audit.py:1078, scripts/sink_scan.py:213, scripts/entry_scan.py:77, scripts/entry_scan.py:209\n- 环境变量/配置加载: scripts/run_taint_audit.py:86, scripts/entry_scan.py:78\n- 文件解析入口: scripts/run_taint_audit.py:87, scripts/run_taint_audit.py:218, scripts/run_taint_audit.py:242, scripts/entry_scan.py:79\n\n## Sinks\n- 命令执行 / 进程启动: scripts/run_taint_audit.py:275\n- 动态执行 / eval: scripts/sink_scan.py:75\n- 模板渲染: scripts/sink_scan.py:76\n- SQL 原生拼接/执行: scripts/sink_scan.py:77\n- 反序列化: scripts/run_taint_audit.py:88, scripts/sink_scan.py:78\n- 文件写入/路径拼接: scripts/sink_scan.py:79\n- 危险配置: scripts/sink_scan.py:82\n\n## Sanitizers (候选)\n- scripts/run_taint_audit.py:92 | re.compile(r\"\\b(escape|sanitize|validate|clean|safe_\\w+|quote|encodeURIComponent|html\\.EscapeString|xss\\.Escape)\\b\", re.IGNORECASE),\n- scripts/run_taint_audit.py:93 | re.compile(r\"\\b(realpath|normpath|filepath\\.Clean|path\\.normalize|canonicalize)\\b\", re.IGNORECASE),\n- scripts/run_taint_audit.py:94 | re.compile(r\"\\b(preparedStatement|parameterized|bindParam|QueryBuilder|allowlist|whitelist|regex)\\b\", re.IGNORECASE),\n- scripts/sink_scan.py:70 | regex: re.Pattern[str]\n- scripts/sink_scan.py:157 | if rule.regex.search(line):\n- scripts/entry_scan.py:69 | regex: re.Pattern[str]\n- scripts/entry_scan.py:154 | if rule.regex.search(line):\n\n## TrustBoundaries\n- 外部请求 -> 应用入口 (HTTP/RPC/MQ/CLI)\n- 应用内部 -> 文件系统/数据库/模板引擎/命令执行\n- 跨租户/跨权限域调用边界\n",
+    "flows_backward_text": "# 反向数据流追踪 (flows_backward)\n\n- 生成时间: 2026-02-28T16:06:20+08:00\n- 参数: `{\"repo_root\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis\", \"output_dir\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis/out\", \"focus_paths\": [\"<repo-root>\"], \"kinds\": [\"cmd\", \"path\", \"query\", \"template\", \"ssrf\", \"deser\", \"memory\", \"authz\"], \"depth\": 2, \"budget\": 200, \"cache\": true}`\n- 扫描范围: <repo-root>\n- 局限说明: 反向追踪优先高危 sink，采用调用点近似与邻域 source 搜索，不是完整 SSA。\n\n- 流数量: 8\n\n## BWD-0001 | deser | scripts/run_taint_audit.py:88\n- Sink: `反序列化` | `(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),`\n- Source: `scripts/run_taint_audit.py:87` | `(\"file_input\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes)|yaml\\.load|json\\.load|xml\\.)\")),`\n- 函数栈: scripts/run_taint_audit.py:<global>:88\n- 变量链: load, compile, yaml\n- Guard: <none>\n- Sanitizer: L92: re.compile(r\"\\b(escape|sanitize|validate|clean|safe_\\w+|quote|encodeURIComponent|html\\.EscapeString|xss\\.Escape)\\b\", re.IGNORECASE),, L93: re.compile(r\"\\b(realpath|normpath|filepath\\.Clean|path\\.normalize|canonicalize)\\b\", re.IGNORECASE),, L94: re.compile(r\"\\b(preparedStatement|parameterized|bindParam|QueryBuilder|allowlist|whitelist|regex)\\b\", re.IGNORECASE),\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n  - 检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。\n- 证据片段:\n  - [sink] `scripts/run_taint_audit.py:88` | `(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),`\n  - [source] `scripts/run_taint_audit.py:87` | `(\"file_input\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes)|yaml\\.load|json\\.load|xml\\.)\")),`\n\n## BWD-0002 | cmd | scripts/run_taint_audit.py:275\n- Sink: `命令执行 / 进程启动` | `proc = subprocess.run(cmd, capture_output=True, text=True)`\n- Source: `scripts/run_taint_audit.py:242` | `return json.loads(path.read_text(encoding=\"utf-8\"))`\n- 函数栈: scripts/run_taint_audit.py:run_child_script:275 -> scripts/run_taint_audit.py:<callsite>:273 -> scripts/run_taint_audit.py:<callsite>:1189\n- 变量链: cmd, run, text, proc\n- Guard: <none>\n- Sanitizer: <none>\n- 证据片段:\n  - [sink] `scripts/run_taint_audit.py:275` | `proc = subprocess.run(cmd, capture_output=True, text=True)`\n  - [source] `scripts/run_taint_audit.py:242` | `return json.loads(path.read_text(encoding=\"utf-8\"))`\n  - [call] `scripts/run_taint_audit.py:273` | `def run_child_script(script: Path, argv: List[str], verbose: bool = False) -> None:`\n  - [call] `scripts/run_taint_audit.py:1189` | `run_child_script(entry_script, entry_argv, verbose=args.verbose)`\n\n## BWD-0003 | cmd | scripts/sink_scan.py:75\n- Sink: `动态执行 / eval` | `Rule(\"eval\", \"动态执行 / eval\", \"high\", re.compile(r\"\\b(eval\\s*\\(|exec\\s*\\(|new\\s+Function\\s*\\(|vm\\.runIn\\w+\\s*\\(|ScriptEngineManager\\b)\")),`\n- Source: `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n- 函数栈: scripts/sink_scan.py:<global>:75\n- 变量链: compile, runIn, Function, Rule\n- Guard: <none>\n- Sanitizer: L70: regex: re.Pattern[str]\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n  - 检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。\n- 证据片段:\n  - [sink] `scripts/sink_scan.py:75` | `Rule(\"eval\", \"动态执行 / eval\", \"high\", re.compile(r\"\\b(eval\\s*\\(|exec\\s*\\(|new\\s+Function\\s*\\(|vm\\.runIn\\w+\\s*\\(|ScriptEngineManager\\b)\")),`\n  - [source] `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n\n## BWD-0004 | query | scripts/sink_scan.py:77\n- Sink: `SQL 原生拼接/执行` | `Rule(\"sql\", \"SQL 原生拼接/执行\", \"high\", re.compile(r\"\\b(cursor\\.execute|db\\.query|db\\.exec|sequelize\\.query|createNativeQuery|Statement\\.execute(Query)?|Raw\\s*\\()\\b\", re.IGNORECASE)),`\n- Source: `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n- 函数栈: scripts/sink_scan.py:<global>:77\n- 变量链: query, IGNORECASE, SQL, compile\n- Guard: <none>\n- Sanitizer: L70: regex: re.Pattern[str]\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n  - 检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。\n- 证据片段:\n  - [sink] `scripts/sink_scan.py:77` | `Rule(\"sql\", \"SQL 原生拼接/执行\", \"high\", re.compile(r\"\\b(cursor\\.execute|db\\.query|db\\.exec|sequelize\\.query|createNativeQuery|Statement\\.execute(Query)?|Raw\\s*\\()\\b\", re.IGNORECASE)),`\n  - [source] `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n\n## BWD-0005 | deser | scripts/sink_scan.py:78\n- Sink: `反序列化` | `Rule(\"deser\", \"反序列化\", \"high\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load\\s*\\(|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder|serde_json::from_(str|slice)|jsonpickle\\.decode)\\b\")),`\n- Source: `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n- 函数栈: scripts/sink_scan.py:<global>:78\n- 变量链: load, ObjectInputStream, deser, compile\n- Guard: <none>\n- Sanitizer: L70: regex: re.Pattern[str]\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n  - 检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。\n- 证据片段:\n  - [sink] `scripts/sink_scan.py:78` | `Rule(\"deser\", \"反序列化\", \"high\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load\\s*\\(|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder|serde_json::from_(str|slice)|jsonpickle\\.decode)\\b\")),`\n  - [source] `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n\n## BWD-0006 | template | scripts/sink_scan.py:76\n- Sink: `模板渲染` | `Rule(\"template\", \"模板渲染\", \"medium\", re.compile(r\"\\b(render_template_string|jinja2\\.Template|Mustache\\.render|handlebars\\.compile|template\\.Execute|Thymeleaf|freemarker)\\b\", re.IGNOR`\n- Source: `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n- 函数栈: scripts/sink_scan.py:<global>:76\n- 变量链: Mustache, IGNORECASE, compile, medium\n- Guard: <none>\n- Sanitizer: L70: regex: re.Pattern[str]\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n  - 检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。\n- 证据片段:\n  - [sink] `scripts/sink_scan.py:76` | `Rule(\"template\", \"模板渲染\", \"medium\", re.compile(r\"\\b(render_template_string|jinja2\\.Template|Mustache\\.render|handlebars\\.compile|template\\.Execute|Thymeleaf|freemarker)\\b\", re.IGNORECASE)),`\n  - [source] `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n\n## BWD-0007 | path | scripts/sink_scan.py:79\n- Sink: `文件写入/路径拼接` | `Rule(\"file_write\", \"文件写入/路径拼接\", \"medium\", re.compile(r\"\\b(open\\s*\\([^\\n]*[\\\"']w|fs\\.writeFile|ioutil\\.WriteFile|Files\\.write|FileOutputStream|path\\.join|os\\.path\\.join|filepath\\.Jo`\n- Source: `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n- 函数栈: scripts/sink_scan.py:<global>:79\n- 变量链: path, WriteFile, ioutil, IGNORECASE\n- Guard: <none>\n- Sanitizer: <none>\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n- 证据片段:\n  - [sink] `scripts/sink_scan.py:79` | `Rule(\"file_write\", \"文件写入/路径拼接\", \"medium\", re.compile(r\"\\b(open\\s*\\([^\\n]*[\\\"']w|fs\\.writeFile|ioutil\\.WriteFile|Files\\.write|FileOutputStream|path\\.join|os\\.path\\.join|filepath\\.Join)\\b\", re.IGNORECASE)),`\n  - [source] `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n\n## BWD-0008 | authz | scripts/sink_scan.py:82\n- Sink: `危险配置` | `Rule(\"dangerous_cfg\", \"危险配置\", \"medium\", re.compile(r\"\\b(verify\\s*=\\s*False|InsecureSkipVerify\\s*:\\s*true|allow_origins\\s*=\\s*\\[?['\\\"]\\*['\\\"]\\]?|disable_auth|skip_auth|permitAll\\s*\\`\n- Source: `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n- 函数栈: scripts/sink_scan.py:<global>:82\n- 变量链: IGNORECASE, InsecureSkipVerify, compile, allow_origins\n- Guard: <none>\n- Sanitizer: <none>\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n- 证据片段:\n  - [sink] `scripts/sink_scan.py:82` | `Rule(\"dangerous_cfg\", \"危险配置\", \"medium\", re.compile(r\"\\b(verify\\s*=\\s*False|InsecureSkipVerify\\s*:\\s*true|allow_origins\\s*=\\s*\\[?['\\\"]\\*['\\\"]\\]?|disable_auth|skip_auth|permitAll\\s*\\()\", re.IGNORECASE)),`\n  - [source] `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n",
+    "flows_forward_text": "# 正向数据流追踪 (flows_forward)\n\n- 生成时间: 2026-02-28T16:06:20+08:00\n- 参数: `{\"repo_root\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis\", \"output_dir\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis/out\", \"focus_paths\": [\"<repo-root>\"], \"kinds\": [\"cmd\", \"path\", \"query\", \"template\", \"ssrf\", \"deser\", \"memory\", \"authz\"], \"depth\": 2, \"budget\": 200, \"cache\": true}`\n- 扫描范围: <repo-root>\n- 局限说明: 正向追踪用于补漏与发现未知 sink，覆盖同文件窗口与风险调用关键词。\n\n- 流数量: 6\n\n## FWD-0001 | Source `scripts/run_taint_audit.py:1278`\n- Source 片段: `if __name__ == \"__main__\":`\n- 命中候选 sinks: 0\n- 未知风险调用: 1\n  - `scripts/run_taint_audit.py:1279` | `raise SystemExit(main())`\n- 备注: 正向追踪基于同文件窗口与风险调用关键词，主要用于补漏与发现未知 sink。\n\n## FWD-0002 | Source `scripts/run_taint_audit.py:83`\n- Source 片段: `(\"rpc_input\", re.compile(r\"\\b(request\\s*\\*?\\w+Request|grpc\\.|thrift|protobuf|rpc\\.Call)\")),`\n- 命中候选 sinks: 2\n  - `scripts/run_taint_audit.py:275` | `命令执行 / 进程启动` | `proc = subprocess.run(cmd, capture_output=True, text=True)`\n  - `scripts/run_taint_audit.py:88` | `反序列化` | `(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),`\n- 未知风险调用: 6\n  - `scripts/run_taint_audit.py:216` | `with path.open(\"rb\") as f:`\n  - `scripts/run_taint_audit.py:241` | `def load_json(path: Path) -> dict:`\n  - `scripts/run_taint_audit.py:242` | `return json.loads(path.read_text(encoding=\"utf-8\"))`\n  - `scripts/run_taint_audit.py:247` | `path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding=\"utf-8\")`\n  - `scripts/run_taint_audit.py:250` | `def load_cache(path: Path) -> dict:`\n  - `scripts/run_taint_audit.py:254` | `return load_json(path)`\n- 备注: 正向追踪基于同文件窗口与风险调用关键词，主要用于补漏与发现未知 sink。\n\n## FWD-0003 | Source `scripts/run_taint_audit.py:84`\n- Source 片段: `(\"mq_input\", re.compile(r\"\\b(message|msg|payload|consumer|subscribe|consume|event)\\b\", re.IGNORECASE)),`\n- 命中候选 sinks: 2\n  - `scripts/run_taint_audit.py:275` | `命令执行 / 进程启动` | `proc = subprocess.run(cmd, capture_output=True, text=True)`\n  - `scripts/run_taint_audit.py:88` | `反序列化` | `(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),`\n- 未知风险调用: 6\n  - `scripts/run_taint_audit.py:216` | `with path.open(\"rb\") as f:`\n  - `scripts/run_taint_audit.py:241` | `def load_json(path: Path) -> dict:`\n  - `scripts/run_taint_audit.py:242` | `return json.loads(path.read_text(encoding=\"utf-8\"))`\n  - `scripts/run_taint_audit.py:247` | `path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding=\"utf-8\")`\n  - `scripts/run_taint_audit.py:250` | `def load_cache(path: Path) -> dict:`\n  - `scripts/run_taint_audit.py:254` | `return load_json(path)`\n- 备注: 正向追踪基于同文件窗口与风险调用关键词，主要用于补漏与发现未知 sink。\n\n## FWD-0004 | Source `scripts/run_taint_audit.py:1078`\n- Source 片段: `parser = argparse.ArgumentParser(description=\"通用静态污点审计统一入口\")`\n- 命中候选 sinks: 0\n- 未知风险调用: 8\n  - `scripts/run_taint_audit.py:1127` | `cache = {} if args.no_cache else load_cache(cache_path)`\n  - `scripts/run_taint_audit.py:1153` | `write_text(output_dir / \"entries.md\", entries_md_text)`\n  - `scripts/run_taint_audit.py:1154` | `write_text(output_dir / \"sinks.md\", sinks_md_text)`\n  - `scripts/run_taint_audit.py:1155` | `write_text(output_dir / \"taint_policy.md\", taint_policy_text)`\n  - `scripts/run_taint_audit.py:1156` | `write_text(output_dir / \"flows_backward.md\", flows_backward_text)`\n  - `scripts/run_taint_audit.py:1157` | `write_text(output_dir / \"flows_forward.md\", flows_forward_text)`\n- 备注: 正向追踪基于同文件窗口与风险调用关键词，主要用于补漏与发现未知 sink。\n\n## FWD-0005 | Source `scripts/run_taint_audit.py:86`\n- Source 片段: `(\"env_input\", re.compile(r\"\\b(getenv\\s*\\(|os\\.environ|process\\.env|dotenv|viper\\.Get)\")),`\n- 命中候选 sinks: 2\n  - `scripts/run_taint_audit.py:275` | `命令执行 / 进程启动` | `proc = subprocess.run(cmd, capture_output=True, text=True)`\n  - `scripts/run_taint_audit.py:88` | `反序列化` | `(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),`\n- 未知风险调用: 6\n  - `scripts/run_taint_audit.py:216` | `with path.open(\"rb\") as f:`\n  - `scripts/run_taint_audit.py:241` | `def load_json(path: Path) -> dict:`\n  - `scripts/run_taint_audit.py:242` | `return json.loads(path.read_text(encoding=\"utf-8\"))`\n  - `scripts/run_taint_audit.py:247` | `path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding=\"utf-8\")`\n  - `scripts/run_taint_audit.py:250` | `def load_cache(path: Path) -> dict:`\n  - `scripts/run_taint_audit.py:254` | `return load_json(path)`\n- 备注: 正向追踪基于同文件窗口与风险调用关键词，主要用于补漏与发现未知 sink。\n\n## FWD-0006 | Source `scripts/run_taint_audit.py:87`\n- Source 片段: `(\"file_input\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes)|yaml\\.load|json\\.load|xml\\.)\")),`\n- 命中候选 sinks: 2\n  - `scripts/run_taint_audit.py:275` | `命令执行 / 进程启动` | `proc = subprocess.run(cmd, capture_output=True, text=True)`\n  - `scripts/run_taint_audit.py:88` | `反序列化` | `(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),`\n- 未知风险调用: 6\n  - `scripts/run_taint_audit.py:216` | `with path.open(\"rb\") as f:`\n  - `scripts/run_taint_audit.py:241` | `def load_json(path: Path) -> dict:`\n  - `scripts/run_taint_audit.py:242` | `return json.loads(path.read_text(encoding=\"utf-8\"))`\n  - `scripts/run_taint_audit.py:247` | `path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding=\"utf-8\")`\n  - `scripts/run_taint_audit.py:250` | `def load_cache(path: Path) -> dict:`\n  - `scripts/run_taint_audit.py:254` | `return load_json(path)`\n- 备注: 正向追踪基于同文件窗口与风险调用关键词，主要用于补漏与发现未知 sink。\n",
+    "authz_model_text": "# 权限模型提取 (authz_model)\n\n- 生成时间: 2026-02-28T16:06:20+08:00\n- 参数: `{\"repo_root\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis\", \"output_dir\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis/out\", \"focus_paths\": [\"<repo-root>\"], \"kinds\": [\"cmd\", \"path\", \"query\", \"template\", \"ssrf\", \"deser\", \"memory\", \"authz\"], \"depth\": 2, \"budget\": 200, \"cache\": true}`\n- 扫描范围: <repo-root>\n- 局限说明: 关键词扫描不等价于有效授权校验，需人工核验权限绑定与作用域传播。\n\n- 扫描文件数: 3\n- 命中数: 12\n- 关键词频次: {'auth': 3, 'permission': 3, 'permit': 3, 'owner': 4, 'tenant': 4, 'role': 3, 'policy': 3}\n\n## 命中列表\n- `scripts/run_taint_audit.py:98` | `re.compile(r\"\\b(if\\s+.*(auth|authorize|permission|permit|role|tenant|owner|rbac|abac)|check\\w*\\(|require\\w*\\()\", re.IGNORECASE),`\n- `scripts/run_taint_audit.py:99` | `re.compile(r\"\\b(assert|deny|forbid|is_admin|is_owner|has_role|tenant_id)\\b\", re.IGNORECASE),`\n- `scripts/run_taint_audit.py:103` | `re.compile(r\"\\b(auth|authorize|authorization|permission|permit|deny|rbac|abac|policy)\\b\", re.IGNORECASE),`\n- `scripts/run_taint_audit.py:104` | `re.compile(r\"\\b(owner|tenant|tenant_id|org_id|account_id|scope|principal|subject)\\b\", re.IGNORECASE),`\n- `scripts/run_taint_audit.py:558` | `for kw in [\"auth\", \"permission\", \"permit\", \"owner\", \"tenant\", \"role\", \"policy\"]:`\n- `scripts/run_taint_audit.py:762` | `def header_block(title: str, params: dict, scope: Sequence[str], limitations: str) -> List[str]:`\n- `scripts/run_taint_audit.py:768` | `f\"- 扫描范围: {', '.join(scope) if scope else '<repo-root>'}\",`\n- `scripts/run_taint_audit.py:1035` | `lines.append(\"4. 对 Possible 项做定向人工复核，更新 taint policy 与误报抑制规则。\")`\n- `scripts/sink_scan.py:182` | `scope = [str(p.relative_to(repo_root)) if p.is_relative_to(repo_root) else str(p) for p in focus_paths] if focus_paths else [\"<repo-root>\"]`\n- `scripts/sink_scan.py:190` | `lines.append(f\"- 扫描范围: {', '.join(scope)}\")`\n- `scripts/entry_scan.py:178` | `scope = [str(p.relative_to(repo_root)) if p.is_relative_to(repo_root) else str(p) for p in focus_paths] if focus_paths else [\"<repo-root>\"]`\n- `scripts/entry_scan.py:186` | `lines.append(f\"- 扫描范围: {', '.join(scope)}\")`\n",
+    "findings_text": "# 漏洞发现清单 (findings)\n\n- 生成时间: 2026-02-28T16:06:20+08:00\n- 参数: `{\"repo_root\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis\", \"output_dir\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis/out\", \"focus_paths\": [\"<repo-root>\"], \"kinds\": [\"cmd\", \"path\", \"query\", \"template\", \"ssrf\", \"deser\", \"memory\", \"authz\"], \"depth\": 2, \"budget\": 200, \"cache\": true}`\n- 扫描范围: <repo-root>\n- 局限说明: 证据评分为静态估算，Confirmed 仍需结合运行时验证与业务上下文确认。\n\n- 总发现数: 8\n- 严重性分布: {'critical': 1, 'high': 4, 'medium': 3}\n- 状态分布: {'Confirmed': 1, 'Likely': 6, 'Possible': 1}\n\n## F-002 | critical | Confirmed | score=100\n- 标题: 命令执行 / 进程启动 潜在污点传播 (cmd)\n- 影响: 未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。\n- Source: `scripts/run_taint_audit.py:242`\n- Sink: `scripts/run_taint_audit.py:275`\n- 函数栈: scripts/run_taint_audit.py:run_child_script:275 -> scripts/run_taint_audit.py:<callsite>:273 -> scripts/run_taint_audit.py:<callsite>:1189\n- 变量链: cmd, run, text, proc\n- Guard: <none>\n- Sanitizer: <none>\n- 权限绑定提示: 检测到部分 authz 语义，需核验是否覆盖当前路径\n- 静态可利用性: 静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。\n- 修复建议: 优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。\n- 评分依据:\n  - 高危 sink 基础分 +60\n  - 存在 source 候选 +15\n  - 存在调用栈证据 +8\n  - 变量链线索 +7\n  - 正向追踪命中同一 sink +10\n- 证据链:\n  - [sink] `scripts/run_taint_audit.py:275` | `proc = subprocess.run(cmd, capture_output=True, text=True)`\n  - [source] `scripts/run_taint_audit.py:242` | `return json.loads(path.read_text(encoding=\"utf-8\"))`\n  - [call] `scripts/run_taint_audit.py:273` | `def run_child_script(script: Path, argv: List[str], verbose: bool = False) -> None:`\n  - [call] `scripts/run_taint_audit.py:1189` | `run_child_script(entry_script, entry_argv, verbose=args.verbose)`\n\n## F-003 | high | Likely | score=76\n- 标题: 动态执行 / eval 潜在污点传播 (cmd)\n- 影响: 未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。\n- Source: `scripts/sink_scan.py:213`\n- Sink: `scripts/sink_scan.py:75`\n- 函数栈: scripts/sink_scan.py:<global>:75\n- 变量链: compile, runIn, Function, Rule\n- Guard: <none>\n- Sanitizer: L70: regex: re.Pattern[str]\n- 权限绑定提示: 检测到部分 authz 语义，需核验是否覆盖当前路径\n- 静态可利用性: 静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。\n- 修复建议: 优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。\n- 评分依据:\n  - 高危 sink 基础分 +60\n  - 存在 source 候选 +15\n  - 变量链线索 +7\n  - 检测到净化器，降低可利用性\n- 证据链:\n  - [sink] `scripts/sink_scan.py:75` | `Rule(\"eval\", \"动态执行 / eval\", \"high\", re.compile(r\"\\b(eval\\s*\\(|exec\\s*\\(|new\\s+Function\\s*\\(|vm\\.runIn\\w+\\s*\\(|ScriptEngineManager\\b)\")),`\n  - [source] `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n  - 检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。\n\n## F-004 | high | Likely | score=76\n- 标题: SQL 原生拼接/执行 潜在污点传播 (query)\n- 影响: 未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。\n- Source: `scripts/sink_scan.py:213`\n- Sink: `scripts/sink_scan.py:77`\n- 函数栈: scripts/sink_scan.py:<global>:77\n- 变量链: query, IGNORECASE, SQL, compile\n- Guard: <none>\n- Sanitizer: L70: regex: re.Pattern[str]\n- 权限绑定提示: 检测到部分 authz 语义，需核验是否覆盖当前路径\n- 静态可利用性: 静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。\n- 修复建议: 优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。\n- 评分依据:\n  - 高危 sink 基础分 +60\n  - 存在 source 候选 +15\n  - 变量链线索 +7\n  - 检测到净化器，降低可利用性\n- 证据链:\n  - [sink] `scripts/sink_scan.py:77` | `Rule(\"sql\", \"SQL 原生拼接/执行\", \"high\", re.compile(r\"\\b(cursor\\.execute|db\\.query|db\\.exec|sequelize\\.query|createNativeQuery|Statement\\.execute(Query)?|Raw\\s*\\()\\b\", re.IGNORECASE)),`\n  - [source] `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n  - 检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。\n\n## F-005 | high | Likely | score=76\n- 标题: 反序列化 潜在污点传播 (deser)\n- 影响: 未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。\n- Source: `scripts/sink_scan.py:213`\n- Sink: `scripts/sink_scan.py:78`\n- 函数栈: scripts/sink_scan.py:<global>:78\n- 变量链: load, ObjectInputStream, deser, compile\n- Guard: <none>\n- Sanitizer: L70: regex: re.Pattern[str]\n- 权限绑定提示: 检测到部分 authz 语义，需核验是否覆盖当前路径\n- 静态可利用性: 静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。\n- 修复建议: 优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。\n- 评分依据:\n  - 高危 sink 基础分 +60\n  - 存在 source 候选 +15\n  - 变量链线索 +7\n  - 检测到净化器，降低可利用性\n- 证据链:\n  - [sink] `scripts/sink_scan.py:78` | `Rule(\"deser\", \"反序列化\", \"high\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load\\s*\\(|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder|serde_json::from_(str|slice)|jsonpickle\\.decode)\\b\")),`\n  - [source] `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n  - 检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。\n\n## F-001 | high | Likely | score=74\n- 标题: 反序列化 潜在污点传播 (deser)\n- 影响: 未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。\n- Source: `scripts/run_taint_audit.py:87`\n- Sink: `scripts/run_taint_audit.py:88`\n- 函数栈: scripts/run_taint_audit.py:<global>:88\n- 变量链: load, compile, yaml\n- Guard: <none>\n- Sanitizer: L92: re.compile(r\"\\b(escape|sanitize|validate|clean|safe_\\w+|quote|encodeURIComponent|html\\.EscapeString|xss\\.Escape)\\b\", re.IGNORECASE),, L93: re.compile(r\"\\b(realpath|normpath|filepath\\.Clean|path\\.normalize|canonicalize)\\b\", re.IGNORECASE),, L94: re.compile(r\"\\b(preparedStatement|parameterized|bindParam|QueryBuilder|allowlist|whitelist|regex)\\b\", re.IGNORECASE),\n- 权限绑定提示: 检测到部分 authz 语义，需核验是否覆盖当前路径\n- 静态可利用性: 静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。\n- 修复建议: 优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。\n- 评分依据:\n  - 高危 sink 基础分 +60\n  - 存在 source 候选 +15\n  - 变量链线索 +7\n  - 正向追踪命中同一 sink +10\n  - 检测到净化器，降低可利用性\n- 证据链:\n  - [sink] `scripts/run_taint_audit.py:88` | `(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),`\n  - [source] `scripts/run_taint_audit.py:87` | `(\"file_input\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes)|yaml\\.load|json\\.load|xml\\.)\")),`\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n  - 检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。\n\n## F-007 | medium | Likely | score=62\n- 标题: 文件写入/路径拼接 潜在污点传播 (path)\n- 影响: 未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。\n- Source: `scripts/sink_scan.py:213`\n- Sink: `scripts/sink_scan.py:79`\n- 函数栈: scripts/sink_scan.py:<global>:79\n- 变量链: path, WriteFile, ioutil, IGNORECASE\n- Guard: <none>\n- Sanitizer: <none>\n- 权限绑定提示: 检测到部分 authz 语义，需核验是否覆盖当前路径\n- 静态可利用性: 静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。\n- 修复建议: 优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。\n- 评分依据:\n  - 中危 sink 基础分 +40\n  - 存在 source 候选 +15\n  - 变量链线索 +7\n- 证据链:\n  - [sink] `scripts/sink_scan.py:79` | `Rule(\"file_write\", \"文件写入/路径拼接\", \"medium\", re.compile(r\"\\b(open\\s*\\([^\\n]*[\\\"']w|fs\\.writeFile|ioutil\\.WriteFile|Files\\.write|FileOutputStream|path\\.join|os\\.path\\.join|filepath\\.Join)\\b\", re.IGNORECASE)),`\n  - [source] `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n\n## F-008 | medium | Likely | score=62\n- 标题: 危险配置 潜在污点传播 (authz)\n- 影响: 未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。\n- Source: `scripts/sink_scan.py:213`\n- Sink: `scripts/sink_scan.py:82`\n- 函数栈: scripts/sink_scan.py:<global>:82\n- 变量链: IGNORECASE, InsecureSkipVerify, compile, allow_origins\n- Guard: <none>\n- Sanitizer: <none>\n- 权限绑定提示: 检测到部分 authz 语义，需核验是否覆盖当前路径\n- 静态可利用性: 静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。\n- 修复建议: 优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。\n- 评分依据:\n  - 中危 sink 基础分 +40\n  - 存在 source 候选 +15\n  - 变量链线索 +7\n- 证据链:\n  - [sink] `scripts/sink_scan.py:82` | `Rule(\"dangerous_cfg\", \"危险配置\", \"medium\", re.compile(r\"\\b(verify\\s*=\\s*False|InsecureSkipVerify\\s*:\\s*true|allow_origins\\s*=\\s*\\[?['\\\"]\\*['\\\"]\\]?|disable_auth|skip_auth|permitAll\\s*\\()\", re.IGNORECASE)),`\n  - [source] `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n\n## F-006 | medium | Possible | score=56\n- 标题: 模板渲染 潜在污点传播 (template)\n- 影响: 未经充分净化与权限绑定的数据可进入敏感操作，可能导致命令执行、越权、数据破坏或泄露。\n- Source: `scripts/sink_scan.py:213`\n- Sink: `scripts/sink_scan.py:76`\n- 函数栈: scripts/sink_scan.py:<global>:76\n- 变量链: Mustache, IGNORECASE, compile, medium\n- Guard: <none>\n- Sanitizer: L70: regex: re.Pattern[str]\n- 权限绑定提示: 检测到部分 authz 语义，需核验是否覆盖当前路径\n- 静态可利用性: 静态可利用性判定：需结合运行时参数控制度、认证上下文与净化器有效性进行最终确认。\n- 修复建议: 优先采用白名单校验、参数化接口、上下文权限绑定与输出编码；为关键路径补充单测/安全回归测试。\n- 评分依据:\n  - 中危 sink 基础分 +40\n  - 存在 source 候选 +15\n  - 变量链线索 +7\n  - 检测到净化器，降低可利用性\n- 证据链:\n  - [sink] `scripts/sink_scan.py:76` | `Rule(\"template\", \"模板渲染\", \"medium\", re.compile(r\"\\b(render_template_string|jinja2\\.Template|Mustache\\.render|handlebars\\.compile|template\\.Execute|Thymeleaf|freemarker)\\b\", re.IGNORECASE)),`\n  - [source] `scripts/sink_scan.py:213` | `parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")`\n- 备注:\n  - 未解析到明显调用者，函数栈证据以当前函数为主。\n  - 检测到疑似净化器，需人工确认净化是否覆盖到 sink 参数。\n",
+    "chains_text": "# 攻击链组合 (attack_chains)\n\n- 生成时间: 2026-02-28T16:06:20+08:00\n- 参数: `{\"repo_root\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis\", \"output_dir\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis/out\", \"focus_paths\": [\"<repo-root>\"], \"kinds\": [\"cmd\", \"path\", \"query\", \"template\", \"ssrf\", \"deser\", \"memory\", \"authz\"], \"depth\": 2, \"budget\": 200, \"cache\": true}`\n- 扫描范围: <repo-root>\n- 局限说明: 攻击链为静态组合推演，不代表真实环境可直接利用。\n\n- 攻击链数量: 1\n\n## CHAIN-01 | 写文件 -> 加载/执行\n- 前置条件:\n  - 攻击者可控文件名或内容\n  - 目标存在后续加载/执行路径\n- 步骤:\n  - 利用 path 类问题写入可控内容或篡改关键文件\n  - 触发 cmd/deser/template 路径实现执行或扩展控制\n- 影响面: 可能导致持久化控制、远程代码执行或供应链污染。\n",
+    "report_text": "# 静态污点审计报告 (report)\n\n- 生成时间: 2026-02-28T16:06:20+08:00\n- 参数: `{\"repo_root\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis\", \"output_dir\": \"/Users/xuziqiang/Workspace/my-skills/taint-analysis/out\", \"focus_paths\": [\"<repo-root>\"], \"kinds\": [\"cmd\", \"path\", \"query\", \"template\", \"ssrf\", \"deser\", \"memory\", \"authz\"], \"depth\": 2, \"budget\": 200, \"cache\": true}`\n- 扫描范围: <repo-root>\n- 局限说明: 本报告基于离线静态启发式分析，建议将高风险项纳入代码复核与测试验证。\n\n## 摘要\n- 总发现: 8\n- 严重性分布: {'critical': 1, 'high': 4, 'medium': 3}\n- 状态分布: {'Confirmed': 1, 'Likely': 6, 'Possible': 1}\n- 高危 Confirmed: 1\n\n## 方法与范围\n- Phase0: 工程画像、函数索引、近似调用图\n- Phase1: 入口面与 sink 面静态扫描\n- Phase2: 高危 sink 反向追踪、路径敏感与净化器检查\n- Phase2.5: 代表 source 正向补漏\n- Phase3: authz 语义提取与越权提示\n- Phase3.5: 交叉验证、去重与证据评分\n- Phase4: 攻击链规则组合\n- Phase5: 结构化报告生成\n- 扫描文件数: 3\n- 语言分布: {'.py': 3}\n\n## 发现列表（Top）\n- F-002 | critical | Confirmed | score=100 | 命令执行 / 进程启动 潜在污点传播 (cmd) | scripts/run_taint_audit.py:275\n- F-003 | high | Likely | score=76 | 动态执行 / eval 潜在污点传播 (cmd) | scripts/sink_scan.py:75\n- F-004 | high | Likely | score=76 | SQL 原生拼接/执行 潜在污点传播 (query) | scripts/sink_scan.py:77\n- F-005 | high | Likely | score=76 | 反序列化 潜在污点传播 (deser) | scripts/sink_scan.py:78\n- F-001 | high | Likely | score=74 | 反序列化 潜在污点传播 (deser) | scripts/run_taint_audit.py:88\n- F-007 | medium | Likely | score=62 | 文件写入/路径拼接 潜在污点传播 (path) | scripts/sink_scan.py:79\n- F-008 | medium | Likely | score=62 | 危险配置 潜在污点传播 (authz) | scripts/sink_scan.py:82\n- F-006 | medium | Possible | score=56 | 模板渲染 潜在污点传播 (template) | scripts/sink_scan.py:76\n\n## 攻击链\n- CHAIN-01 | 写文件 -> 加载/执行 | 影响: 可能导致持久化控制、远程代码执行或供应链污染。\n\n## 修复路线图\n1. 先修复 critical/high 且 Confirmed/Likely 的命令执行、反序列化、越权链路。\n2. 为高风险 sink 引入统一输入校验、参数化接口与显式权限绑定。\n3. 将本次 finding 转化为单元测试/集成测试，建立回归基线。\n4. 对 Possible 项做定向人工复核，更新 taint policy 与误报抑制规则。\n\n## 假设与局限\n- 假设代码仓库可代表主要执行路径，未动态加载的外部插件默认不可见。\n- 局限: 近似调用图与正则模式可能漏报动态分发、反射、宏展开、多态序列化路径。\n- 局限: 未执行真实请求与运行时探针，证据链以静态可复核为目标。\n"
+  }
+}

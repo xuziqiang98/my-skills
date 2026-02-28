@@ -1,0 +1,148 @@
+{
+  "generated_at": "2026-02-28T16:06:20+08:00",
+  "repo_root": "/Users/xuziqiang/Workspace/my-skills/taint-analysis",
+  "output": "/Users/xuziqiang/Workspace/my-skills/taint-analysis/out/sinks.md",
+  "scan_scope": [
+    "/Users/xuziqiang/Workspace/my-skills/taint-analysis"
+  ],
+  "scanned_files": 3,
+  "budget": 200,
+  "categories": [
+    {
+      "id": "exec",
+      "title": "命令执行 / 进程启动",
+      "severity": "high",
+      "count": 1,
+      "hits": [
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 275,
+          "snippet": "proc = subprocess.run(cmd, capture_output=True, text=True)",
+          "category": "exec",
+          "title": "命令执行 / 进程启动",
+          "severity": "high"
+        }
+      ]
+    },
+    {
+      "id": "eval",
+      "title": "动态执行 / eval",
+      "severity": "high",
+      "count": 1,
+      "hits": [
+        {
+          "file": "scripts/sink_scan.py",
+          "line": 75,
+          "snippet": "Rule(\"eval\", \"动态执行 / eval\", \"high\", re.compile(r\"\\b(eval\\s*\\(|exec\\s*\\(|new\\s+Function\\s*\\(|vm\\.runIn\\w+\\s*\\(|ScriptEngineManager\\b)\")),",
+          "category": "eval",
+          "title": "动态执行 / eval",
+          "severity": "high"
+        }
+      ]
+    },
+    {
+      "id": "template",
+      "title": "模板渲染",
+      "severity": "medium",
+      "count": 1,
+      "hits": [
+        {
+          "file": "scripts/sink_scan.py",
+          "line": 76,
+          "snippet": "Rule(\"template\", \"模板渲染\", \"medium\", re.compile(r\"\\b(render_template_string|jinja2\\.Template|Mustache\\.render|handlebars\\.compile|template\\.Execute|Thymeleaf|freemarker)\\b\", re.IGNOR",
+          "category": "template",
+          "title": "模板渲染",
+          "severity": "medium"
+        }
+      ]
+    },
+    {
+      "id": "sql",
+      "title": "SQL 原生拼接/执行",
+      "severity": "high",
+      "count": 1,
+      "hits": [
+        {
+          "file": "scripts/sink_scan.py",
+          "line": 77,
+          "snippet": "Rule(\"sql\", \"SQL 原生拼接/执行\", \"high\", re.compile(r\"\\b(cursor\\.execute|db\\.query|db\\.exec|sequelize\\.query|createNativeQuery|Statement\\.execute(Query)?|Raw\\s*\\()\\b\", re.IGNORECASE)),",
+          "category": "sql",
+          "title": "SQL 原生拼接/执行",
+          "severity": "high"
+        }
+      ]
+    },
+    {
+      "id": "deser",
+      "title": "反序列化",
+      "severity": "high",
+      "count": 2,
+      "hits": [
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 88,
+          "snippet": "(\"deser_input\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder)\")),",
+          "category": "deser",
+          "title": "反序列化",
+          "severity": "high"
+        },
+        {
+          "file": "scripts/sink_scan.py",
+          "line": 78,
+          "snippet": "Rule(\"deser\", \"反序列化\", \"high\", re.compile(r\"\\b(pickle\\.loads|yaml\\.load\\s*\\(|ObjectInputStream|BinaryFormatter|gob\\.NewDecoder|serde_json::from_(str|slice)|jsonpickle\\.decode)\\b\")),",
+          "category": "deser",
+          "title": "反序列化",
+          "severity": "high"
+        }
+      ]
+    },
+    {
+      "id": "file_write",
+      "title": "文件写入/路径拼接",
+      "severity": "medium",
+      "count": 1,
+      "hits": [
+        {
+          "file": "scripts/sink_scan.py",
+          "line": 79,
+          "snippet": "Rule(\"file_write\", \"文件写入/路径拼接\", \"medium\", re.compile(r\"\\b(open\\s*\\([^\\n]*[\\\"']w|fs\\.writeFile|ioutil\\.WriteFile|Files\\.write|FileOutputStream|path\\.join|os\\.path\\.join|filepath\\.Jo",
+          "category": "file_write",
+          "title": "文件写入/路径拼接",
+          "severity": "medium"
+        }
+      ]
+    },
+    {
+      "id": "network",
+      "title": "外联请求/网络发起",
+      "severity": "medium",
+      "count": 0,
+      "hits": []
+    },
+    {
+      "id": "memory",
+      "title": "格式化与内存边界",
+      "severity": "high",
+      "count": 0,
+      "hits": []
+    },
+    {
+      "id": "dangerous_cfg",
+      "title": "危险配置",
+      "severity": "medium",
+      "count": 1,
+      "hits": [
+        {
+          "file": "scripts/sink_scan.py",
+          "line": 82,
+          "snippet": "Rule(\"dangerous_cfg\", \"危险配置\", \"medium\", re.compile(r\"\\b(verify\\s*=\\s*False|InsecureSkipVerify\\s*:\\s*true|allow_origins\\s*=\\s*\\[?['\\\"]\\*['\\\"]\\]?|disable_auth|skip_auth|permitAll\\s*\\",
+          "category": "dangerous_cfg",
+          "title": "危险配置",
+          "severity": "medium"
+        }
+      ]
+    }
+  ],
+  "total_hits": 8,
+  "limitations": "启发式关键词扫描，需结合上下文做真实性判定。"
+}

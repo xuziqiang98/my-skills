@@ -1,0 +1,181 @@
+{
+  "generated_at": "2026-02-28T16:06:20+08:00",
+  "repo_root": "/Users/xuziqiang/Workspace/my-skills/taint-analysis",
+  "output": "/Users/xuziqiang/Workspace/my-skills/taint-analysis/out/entries.md",
+  "scan_scope": [
+    "/Users/xuziqiang/Workspace/my-skills/taint-analysis"
+  ],
+  "scanned_files": 3,
+  "budget": 200,
+  "categories": [
+    {
+      "id": "main",
+      "title": "main 入口",
+      "count": 3,
+      "hits": [
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 1278,
+          "snippet": "if __name__ == \"__main__\":",
+          "category": "main",
+          "title": "main 入口"
+        },
+        {
+          "file": "scripts/sink_scan.py",
+          "line": 262,
+          "snippet": "if __name__ == \"__main__\":",
+          "category": "main",
+          "title": "main 入口"
+        },
+        {
+          "file": "scripts/entry_scan.py",
+          "line": 257,
+          "snippet": "if __name__ == \"__main__\":",
+          "category": "main",
+          "title": "main 入口"
+        }
+      ]
+    },
+    {
+      "id": "http",
+      "title": "Web handler/router 注册",
+      "count": 0,
+      "hits": []
+    },
+    {
+      "id": "rpc",
+      "title": "RPC service 注册",
+      "count": 2,
+      "hits": [
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 83,
+          "snippet": "(\"rpc_input\", re.compile(r\"\\b(request\\s*\\*?\\w+Request|grpc\\.|thrift|protobuf|rpc\\.Call)\")),",
+          "category": "rpc",
+          "title": "RPC service 注册"
+        },
+        {
+          "file": "scripts/entry_scan.py",
+          "line": 75,
+          "snippet": "Rule(\"rpc\", \"RPC service 注册\", re.compile(r\"\\bgrpc\\.NewServer\\s*\\(|\\bRegister\\w*Server\\s*\\(|\\brpc\\.Register\\s*\\(|\\bthrift\\b|@GrpcService\\b|\\bprotobuf\\b\")),",
+          "category": "rpc",
+          "title": "RPC service 注册"
+        }
+      ]
+    },
+    {
+      "id": "mq",
+      "title": "MQ consumer/callback",
+      "count": 2,
+      "hits": [
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 84,
+          "snippet": "(\"mq_input\", re.compile(r\"\\b(message|msg|payload|consumer|subscribe|consume|event)\\b\", re.IGNORECASE)),",
+          "category": "mq",
+          "title": "MQ consumer/callback"
+        },
+        {
+          "file": "scripts/entry_scan.py",
+          "line": 76,
+          "snippet": "Rule(\"mq\", \"MQ consumer/callback\", re.compile(r\"\\b(subscribe|consume|on_message|onMessage|RabbitListener|KafkaListener)\\b|\\bamqp\\.Channel\\.Consume\\s*\\(|\\bkafka\\.(Consumer|Reader)\\b",
+          "category": "mq",
+          "title": "MQ consumer/callback"
+        }
+      ]
+    },
+    {
+      "id": "cli",
+      "title": "CLI flag/参数入口",
+      "count": 4,
+      "hits": [
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 1078,
+          "snippet": "parser = argparse.ArgumentParser(description=\"通用静态污点审计统一入口\")",
+          "category": "cli",
+          "title": "CLI flag/参数入口"
+        },
+        {
+          "file": "scripts/sink_scan.py",
+          "line": 213,
+          "snippet": "parser = argparse.ArgumentParser(description=\"敏感 sink 快速扫描（只读）\")",
+          "category": "cli",
+          "title": "CLI flag/参数入口"
+        },
+        {
+          "file": "scripts/entry_scan.py",
+          "line": 77,
+          "snippet": "Rule(\"cli\", \"CLI flag/参数入口\", re.compile(r\"\\b(argparse\\.ArgumentParser|click\\.(command|option)|cobra\\.Command|urfave/cli|flag\\.(String|Int|Bool)|commander\\.)\\b\")),",
+          "category": "cli",
+          "title": "CLI flag/参数入口"
+        },
+        {
+          "file": "scripts/entry_scan.py",
+          "line": 209,
+          "snippet": "parser = argparse.ArgumentParser(description=\"入口点快速扫描（只读）\")",
+          "category": "cli",
+          "title": "CLI flag/参数入口"
+        }
+      ]
+    },
+    {
+      "id": "env_cfg",
+      "title": "环境变量/配置加载",
+      "count": 2,
+      "hits": [
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 86,
+          "snippet": "(\"env_input\", re.compile(r\"\\b(getenv\\s*\\(|os\\.environ|process\\.env|dotenv|viper\\.Get)\")),",
+          "category": "env_cfg",
+          "title": "环境变量/配置加载"
+        },
+        {
+          "file": "scripts/entry_scan.py",
+          "line": 78,
+          "snippet": "Rule(\"env_cfg\", \"环境变量/配置加载\", re.compile(r\"\\b(os\\.environ|getenv\\s*\\(|process\\.env|dotenv|viper\\.Get\\w*\\(|config\\.(get|load)|yaml\\.(safe_)?load\\s*\\(|toml\\.load\\s*\\(|json\\.load\\s*\\()",
+          "category": "env_cfg",
+          "title": "环境变量/配置加载"
+        }
+      ]
+    },
+    {
+      "id": "file_parse",
+      "title": "文件解析入口",
+      "count": 4,
+      "hits": [
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 87,
+          "snippet": "(\"file_input\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes)|yaml\\.load|json\\.load|xml\\.)\")),",
+          "category": "file_parse",
+          "title": "文件解析入口"
+        },
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 218,
+          "snippet": "chunk = f.read(1024 * 1024)",
+          "category": "file_parse",
+          "title": "文件解析入口"
+        },
+        {
+          "file": "scripts/run_taint_audit.py",
+          "line": 242,
+          "snippet": "return json.loads(path.read_text(encoding=\"utf-8\"))",
+          "category": "file_parse",
+          "title": "文件解析入口"
+        },
+        {
+          "file": "scripts/entry_scan.py",
+          "line": 79,
+          "snippet": "Rule(\"file_parse\", \"文件解析入口\", re.compile(r\"\\b(read(File|_to_string)?|ReadFile|fs\\.readFile|ioutil\\.ReadFile|Path\\.(read_text|read_bytes))\\b|\\b(json\\.loads|yaml\\.(safe_)?load|xml\\.|p",
+          "category": "file_parse",
+          "title": "文件解析入口"
+        }
+      ]
+    }
+  ],
+  "total_hits": 17,
+  "limitations": "启发式规则扫描；动态分发、模板展开与反射场景可能漏报。"
+}
