@@ -14,10 +14,3 @@
 | opencode-sdk | OpenCode SDK 集成 Skill，覆盖 client 创建、session 管理、文件操作、鉴权、实时事件与模板化代码生成。 | opencode-sdk/SKILL.md |
 | pwn-exploit | 二进制利用 Skill，覆盖栈溢出、格式化字符串、堆利用、整数溢出等常见漏洞类型与利用思路。 | pwn-exploit/SKILL.md |
 | taint-analysis | 通用离线静态污点分析 Skill，覆盖入口/Source 发现、Sink 扫描、双向数据流追踪、攻击链组合与审计报告输出。 | taint-analysis/SKILL.md |
-
-## 目录约定
-
-- 每个 skill 目录至少包含 `SKILL.md`。
-- `references/` 存放方法论与参考文档。
-- `scripts/` 存放自动化脚本。
-- `assets/` 或 `templates/` 存放可复用模板。
