@@ -1,0 +1,167 @@
+{
+  "preferences": [
+    "在代码审计中，除了传统代码安全漏洞（SQL注入、SSTI、SSRF），还应重点关注业务逻辑漏洞",
+    "业务逻辑漏洞需要理解业务流程和权限模型，而非仅依赖污点分析",
+    "审计时必须逐项执行检查清单，不能只依赖迭代分析发现"
+  ],
+  "fixes": [
+    "添加身份认证类漏洞检测：用户枚举、拒绝服务攻击、时序攻击、Host注入",
+    "添加CSRF漏洞检测：检查表单是否有CSRF Token验证",
+    "添加条件竞争漏洞检测：检查并发操作是否有正确的锁机制",
+    "添加完整的数据越权漏洞检测：复购越权、退款越权",
+    "添加Web应用特定检测模式：对比用户端和管理员端的安全机制差异"
+  ],
+  "custom_prompts": "审计Web应用时，必须检查以下业务逻辑漏洞：\n1. 用户注册/登录处是否有用户枚举风险（错误消息差异）\n2. 登录失败处理是否有拒绝服务风险（账号锁定逻辑）\n3. 密码哈希是否使用慢散列函数且是否有时序攻击风险\n4. 密码找回流程是否有Host注入风险\n5. 管理员登录是否有暴力破解防护\n6. 所有敏感操作（支付、充值、退款、订单修改）是否有CSRF Token\n7. 余额操作是否有条件竞争风险（数据库锁）\n8. 复购、退款等操作是否有正确的用户身份验证\n9. 检查所有IDOR漏洞：收货人、订单、支付等\n10. 对比用户端和管理员端的安全机制差异（如登录失败处理、CSRF保护）",
+  "detection_patterns": {
+    "用户枚举": "搜索注册/登录接口的错误消息，如'用户已存在'、'账号不存在'等提示词；对比正常和异常情况的响应差异",
+    "拒绝服务": "检查登录失败处理逻辑，是否有账号锁定机制导致拒绝服务；对比用户端和管理员端的锁定机制",
+    "时序攻击": "检查密码验证函数是否使用慢散列函数（bcrypt, argon2, scrypt），并评估响应时间差异是否可区分用户存在性",
+    "Host注入": "检查密码找回邮件发送代码，是否有Host头部可控；搜索request.host在字符串格式化中的使用",
+    "CSRF": "搜索@csrf.exempt、CSRF验证中间件缺失的endpoint；检查所有POST表单是否有csrf_token字段",
+    "条件竞争": "检查充值、支付等关键业务是否有数据库事务锁（如SELECT FOR UPDATE）；检查读写操作之间是否存在时间窗口",
+    "越权退款": "检查退款接口是否验证当前用户与订单关系；检查order.user_id是否与session匹配",
+    "复购越权": "检查复购接口是否验证当前用户余额；检查订单所有者是否与当前用户匹配"
+  },
+  "vulnerability_taxonomy_additions": [
+    {
+      "category": "业务逻辑漏洞",
+      "subcategories": [
+        "用户枚举（注册/登录错误消息差异）",
+        "拒绝服务（登录失败账号锁定）",
+        "时序攻击（慢散列函数响应时间）",
+        "Host注入（密码重置邮件）",
+        "CSRF（敏感操作无Token）",
+        "条件竞争（并发余额操作）",
+        "越权退款",
+        "越权复购"
+      ]
+    }
+  ],
+  "audit_checklist_additions": [
+    "□ 检查用户注册/登录的错误消息是否一致（防止枚举）",
+    "□ 检查登录失败处理是否有账号锁定机制",
+    "□ 检查密码哈希函数类型和响应时间",
+    "□ 检查密码找回流程是否有Host头注入",
+    "□ 检查管理员登录是否有暴力破解防护",
+    "□ 检查所有敏感操作（支付、充值、退款、添加用户）是否有CSRF保护",
+    "□ 检查余额操作是否有并发控制（锁机制）",
+    "□ 检查复购、退款等操作是否验证用户身份和权限",
+    "□ 对比用户端和管理员端的安全机制差异"
+  ],
+  "false_negatives_learned": [
+    {
+      "vulnerability": "SQL注入-登录盲注",
+      "found": true,
+      "note": "通过污点分析发现"
+    },
+    {
+      "vulnerability": "SQL注入-订单查询",
+      "found": true,
+      "note": "通过污点分析发现"
+    },
+    {
+      "vulnerability": "SSRF",
+      "found": true,
+      "note": "通过污点分析发现"
+    },
+    {
+      "vulnerability": "SSTI",
+      "found": true,
+      "note": "通过污点分析发现"
+    },
+    {
+      "vulnerability": "IDOR-收货人",
+      "found": true,
+      "note": "通过权限检查发现"
+    },
+    {
+      "vulnerability": "IDOR-订单",
+      "found": true,
+      "note": "通过权限检查发现"
+    },
+    {
+      "vulnerability": "用户枚举",
+      "found": false,
+      "reason": "register()返回已存在该用户，未检查异常处理分支的错误消息",
+      "lesson": "需要检查所有异常处理分支的错误消息"
+    },
+    {
+      "vulnerability": "Host注入-密码找回",
+      "found": false,
+      "reason": "forgot_passowrd()中使用request.host构造重置链接，未检查HTTP头使用",
+      "lesson": "需要搜索request.host、request.headers的所有引用"
+    },
+    {
+      "vulnerability": "管理员暴力破解",
+      "found": false,
+      "reason": "admin login无失败锁定，对比用户端有protect_user_login但管理员端没有",
+      "lesson": "需要对比用户端和管理员端的安全机制差异"
+    },
+    {
+      "vulnerability": "CSRF-支付",
+      "found": false,
+      "reason": "payment()无CSRF token，但add_admin有CSRF检查，只检查了部分端点",
+      "lesson": "需要全面搜索所有POST端点是否有CSRF保护"
+    },
+    {
+      "vulnerability": "条件竞争-支付",
+      "found": false,
+      "reason": "payment()中读写余额之间存在TOCTOU，未检查并发场景",
+      "lesson": "需要检查读写操作之间是否存在时间窗口"
+    },
+    {
+      "vulnerability": "布尔盲注-SQL注入时序",
+      "found": false,
+      "reason": "valid_user()使用慢哈希 argon2hasher，用户存在时执行哈希验证(慢)，不存在时快速返回异常(快)，可通过时间差异枚举用户",
+      "lesson": "SQL注入不仅可通过布尔盲注，还可通过响应时间差异（时序攻击）枚举用户，需要检查慢哈希函数在登录验证中的使用"
+    },
+    {
+      "vulnerability": "账号拒绝服务-DoS",
+      "found": false,
+      "reason": "protect_user_login(phone)使用用户输入的phone作为锁定目标，攻击者可锁定任意用户账号",
+      "lesson": "登录失败保护应基于IP而非用户输入，防止攻击者锁定他人账号"
+    },
+    {
+      "vulnerability": "管理员暴力破解",
+      "found": false,
+      "reason": "valid_admin()没有失败次数限制和账号锁定机制，可无限尝试密码",
+      "lesson": "管理员登录应有与用户登录相同的安全保护机制"
+    },
+    {
+      "vulnerability": "条件竞争-充值",
+      "found": false,
+      "reason": "储值卡充值等并发操作缺少锁机制，可多次充值同一张卡",
+      "lesson": "检查所有余额变动操作（充值、支付、退款）是否有with_for_update()锁机制"
+    }
+  ],
+  "limitations_documented": "code-audit skill擅长发现传统代码安全漏洞（SQL注入、SSTI、SSRF、硬编码密钥），但对于业务逻辑漏洞（用户枚举、拒绝服务、条件竞争、越权退款/复购）需要人工渗透测试或业务逻辑审计才能发现",
+  "improvement_areas": [
+    {
+      "area": "强制检查清单执行",
+      "issue": "skill已有custom_prompts和audit_checklist，但执行时未逐项检查",
+      "solution": "在Phase 1完成后，强制输出检查清单完成状态"
+    },
+    {
+      "area": "对比分析",
+      "issue": "用户端和管理员端的安全机制差异未主动对比",
+      "solution": "添加对称检查模式：检查用户端和管理员端的同名功能是否有差异"
+    },
+    {
+      "area": "异常分支检查",
+      "issue": "只关注正常流程，异常处理分支检查不足",
+      "solution": "在Phase 1-2中添加异常处理分支的检查"
+    },
+    {
+      "area": "HTTP头检查",
+      "issue": "request.host等HTTP头在业务逻辑中的使用未检查",
+      "solution": "在入口点识别后，额外检查HTTP请求头的业务使用"
+    }
+  ],
+  "detection_gaps": [
+    "错误消息语义分析（用户枚举）",
+    "HTTP请求头业务使用（Host注入）",
+    "并发控制缺陷（条件竞争）",
+    "安全机制对比分析（用户vs管理员）",
+    "CSRF保护完整性（全端点检查）"
+  ]
+}

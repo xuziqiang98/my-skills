@@ -589,3 +589,33 @@ daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
 5. 攻击链分析
 6. 修复建议
 7. 验证方法
+
+## User-Learned Best Practices & Constraints
+
+> **Auto-Generated Section**: This section is maintained by `skill-evolution-manager`. Do not edit manually.
+
+### User Preferences
+- 在代码审计中，除了传统代码安全漏洞（SQL注入、SSTI、SSRF），还应重点关注业务逻辑漏洞
+- 业务逻辑漏洞需要理解业务流程和权限模型，而非仅依赖污点分析
+- 审计时必须逐项执行检查清单，不能只依赖迭代分析发现
+
+### Known Fixes & Workarounds
+- 添加身份认证类漏洞检测：用户枚举、拒绝服务攻击、时序攻击、Host注入
+- 添加CSRF漏洞检测：检查表单是否有CSRF Token验证
+- 添加条件竞争漏洞检测：检查并发操作是否有正确的锁机制
+- 添加完整的数据越权漏洞检测：复购越权、退款越权
+- 添加Web应用特定检测模式：对比用户端和管理员端的安全机制差异
+
+### Custom Instruction Injection
+
+审计Web应用时，必须检查以下业务逻辑漏洞：
+1. 用户注册/登录处是否有用户枚举风险（错误消息差异）
+2. 登录失败处理是否有拒绝服务风险（账号锁定逻辑）
+3. 密码哈希是否使用慢散列函数且是否有时序攻击风险
+4. 密码找回流程是否有Host注入风险
+5. 管理员登录是否有暴力破解防护
+6. 所有敏感操作（支付、充值、退款、订单修改）是否有CSRF Token
+7. 余额操作是否有条件竞争风险（数据库锁）
+8. 复购、退款等操作是否有正确的用户身份验证
+9. 检查所有IDOR漏洞：收货人、订单、支付等
+10. 对比用户端和管理员端的安全机制差异（如登录失败处理、CSRF保护）
