@@ -68,15 +68,22 @@
 ### 2.2 审计流程
 
 ```
-Phase 0: 项目理解 → LSP 符号扫描
-Phase 1: 入口点发现 → 信任边界识别
-Phase 2: 敏感操作识别 → Sink 发现
-Phase 3: 数据流追踪 → 双向追踪
-Phase 4: 认证授权分析 → 权限检查
-Phase 5: 业务逻辑审计 → 逻辑漏洞
-Phase 6: 漏洞验证 → PoC 生成
-Phase 7: 攻击链组合 → 组合利用
-Phase 8: 报告生成 → 结构化输出
+┌── 批量发现 ──────────────────────────────────────────┐
+│ Phase 0:   项目理解 → LSP 符号扫描、项目类型识别     │
+│ Phase 1:   入口点发现 → 信任边界识别 + 风险排序       │
+│ Phase 2:   Sink 发现 + 全局防御目录 + Sanitizer 目录   │
+└──────────────────────────────────────────────────────┘
+                          ↓
+┌── 逐源深入（for each source_point） ────────────────┐
+│ Phase 3:   数据建模 + 双向数据流追踪（当前入口）     │
+│ Phase 4:   漏洞验证 + PoC + evidence_score（当前入口）│
+└──────────────────────────────────────────────────────┘
+                          ↓
+┌── 全局聚合 ──────────────────────────────────────────┐
+│ Phase 5:   交互矩阵分析 → Top-20 跨源组合效应        │
+│ Phase 6:   攻击链综合 → 多步利用路径构造              │
+│ Phase 7:   报告生成 → 结构化输出                      │
+└──────────────────────────────────────────────────────┘
 ```
 
 ### 2.3 假设与局限
@@ -226,11 +233,13 @@ Content-Type: application/json
 
 ### A. 审计产物清单
 
-- `out/entry_points.md` - 入口点清单
-- `out/sensitive_operations.md` - 敏感操作清单
-- `out/flows_traced.md` - 数据流追踪结果
-- `out/authz_analysis.md` - 认证授权分析
-- `out/findings.md` - 漏洞发现清单
+- `out/source_index.md` - 入口点清单（风险排序）
+- `out/sink_index.md` - 敏感操作清单 + Sanitizer 目录
+- `out/defense_catalog.md` - 全局防御机制目录
+- `out/progress.md` - 审计进度追踪（含跳过原因）
+- `out/per_source/S{N}_analysis.md` - 逐源深入分析结果
+- `out/findings.md` - 漏洞发现清单（含 evidence_score）
+- `out/interaction_matrix.md` - 交互矩阵分析
 - `out/attack_chains.md` - 攻击链组合
 
 ### B. 工具与方法

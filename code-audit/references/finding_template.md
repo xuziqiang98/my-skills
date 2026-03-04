@@ -10,7 +10,7 @@
 - **严重性**: Critical / High / Medium / Low
 - **类型**: 漏洞分类
 - **状态**: Confirmed / Likely / Possible
-- **置信度**: XX%
+- **evidence_score**: 0-100（见下方评分标准）
 
 ---
 
@@ -187,4 +187,37 @@ if !allowedCmds[cmd] {
 - CWE-78: OS Command Injection
 - OWASP: Command Injection
 - CVSS: 9.8 (Critical)
+```
+
+---
+
+## Evidence Score 评分标准
+
+> 借鉴 taint-analysis 的 `evidence_score(0-100)` 框架，为每条漏洞发现提供量化的置信度评估。
+
+### 状态与分数范围对应
+
+| 状态 | 分数范围 | 含义 |
+|------|----------|------|
+| **Confirmed** | 80-100 | 证据链闭环：Source/Sink/路径明确，Guard/Sanitizer 不足以阻断或可绕过 |
+| **Likely** | 50-79 | Source 与 Sink 明确，路径基本成立，但 Guard/Sanitizer 真实性仍需验证 |
+| **Possible** | 0-49 | 命中可疑 Sink 或路径片段，证据不完整或依赖较强假设 |
+
+### 评分维度（各维度独立评分，加权求和）
+
+| 维度 | 权重 | 评分标准 |
+|------|------|----------|
+| Source 可控性 | 25% | 外部输入完全可控=25，部分可控=15，仅间接影响=5 |
+| Sink 危险性 | 25% | 直接执行/写入=25，条件执行=15，信息泄露=10 |
+| 路径完整性 | 30% | 每跳可定位=30，部分跳推断=15，大量假设=5 |
+| Guard/Sanitizer | 20% | 无防护或可绕过=20，防护不完整=10，完整防护=0 |
+
+### 示例
+
+```
+## F-003 | high | Likely | evidence_score=72
+  Source可控性: 25/25 (直接HTTP参数)
+  Sink危险性:  25/25 (subprocess.run shell=True)
+  路径完整性: 15/30 (中间跳经ORM层，无法确认是否触发参数化)
+  Guard/Sanitizer: 7/20 (sanitize_cmd存在但可能可绕过)
 ```
