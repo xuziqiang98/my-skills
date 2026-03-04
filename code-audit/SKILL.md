@@ -495,3 +495,9 @@ if 已跳过 非空:
 5. **evidence_score 一致性**：评分是否与证据充分度匹配？
 
 ---
+
+<!-- EVOLUTION_REFERENCE:START -->
+## Evolution Learned Reference
+
+> Evolution data is maintained in `references/evolution_learned.md` by `skill-evolution-manager`.
+<!-- EVOLUTION_REFERENCE:END -->
