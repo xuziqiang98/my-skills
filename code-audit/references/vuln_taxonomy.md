@@ -376,3 +376,36 @@
 | 路径穿越 | 需要特定条件 | Medium |
 | 弱加密 | 非敏感数据 | Low |
 | 信息泄露 | 有限影响 | Low |
+
+---
+
+## 10. Sanitizer 目录构建指南
+
+在 Phase 2 Sink 发现过程中，同步构建项目的 Sanitizer 目录。该目录是后续 Phase 3-4 逐源深入分析（数据流追踪 + 漏洞验证）的关键输入。
+
+### 构建方法
+
+1. **被动发现**：在 Sink 反向追踪中，记录路径上遇到的所有净化/校验函数
+2. **主动搜索**：使用 `grep` / `ast_grep_search` 搜索常见 Sanitizer 模式：
+   - 关键词：`sanitize`, `escape`, `filter`, `validate`, `clean`, `strip`, `encode`, `whitelist`
+   - 装饰器/注解：`@validator`, `@sanitize`, `@safe`
+   - 框架内置：`html.escape()`, `parameterized query`, `prepared statement`
+
+### 记录格式
+
+```
+Sanitizer 目录:
+
+| ID | 函数/方法 | 位置 | 净化类型 | 覆盖威胁 | 缺陷评估 |
+|----|----------|------|----------|----------|----------|
+| S-01 | sanitize_input() | utils/safe.py:30 | 字符过滤 | XSS, SQLi | ❌ 未过滤 `$()` |
+| S-02 | escape_html() | lib/template.py:15 | HTML转义 | XSS | ✅ 完整 |
+| S-03 | (框架内置ORM) | - | 参数化查询 | SQLi | ✅ 完整 |
+```
+
+### 缺陷评估维度
+
+- **完整性**：是否覆盖所有危险字符/模式？
+- **位置正确性**：是否在所有到达 Sink 的路径上？
+- **绕过可能**：编码切换、双重编码、Unicode 规范化等
+- **一致性**：同类 Sink 是否统一使用同一 Sanitizer？
