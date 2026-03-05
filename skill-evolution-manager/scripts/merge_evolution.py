@@ -1,7 +1,67 @@
 import os
 import sys
 import json
-import datetime
+
+ALLOWED_KEYS = {"preferences", "fixes", "custom_prompts"}
+
+
+def _dedupe_str_list(items):
+    deduped = []
+    seen = set()
+    for item in items:
+        if not isinstance(item, str):
+            continue
+        normalized = " ".join(item.strip().split())
+        if not normalized:
+            continue
+        if normalized in seen:
+            continue
+        seen.add(normalized)
+        deduped.append(normalized)
+    return deduped
+
+
+def _validate_new_data_shape(new_data):
+    if not isinstance(new_data, dict):
+        raise ValueError("New evolution data must be a JSON object")
+
+    unknown_keys = sorted(set(new_data.keys()) - ALLOWED_KEYS)
+    if unknown_keys:
+        raise ValueError(
+            f"Unsupported keys in new evolution data: {unknown_keys}. "
+            f"Only {sorted(ALLOWED_KEYS)} are allowed."
+        )
+
+    for key in ("preferences", "fixes"):
+        if key in new_data and not isinstance(new_data[key], list):
+            raise ValueError(f"Field '{key}' must be a list of strings")
+
+    if "custom_prompts" in new_data and not isinstance(new_data["custom_prompts"], str):
+        raise ValueError("Field 'custom_prompts' must be a string")
+
+
+def _load_core_data(evolution_json_path):
+    if not os.path.exists(evolution_json_path):
+        return {}
+    try:
+        with open(evolution_json_path, "r", encoding="utf-8") as f:
+            raw = json.load(f)
+    except Exception:
+        return {}
+
+    if not isinstance(raw, dict):
+        return {}
+
+    core = {}
+    if "preferences" in raw and isinstance(raw["preferences"], list):
+        core["preferences"] = _dedupe_str_list(raw["preferences"])
+    if "fixes" in raw and isinstance(raw["fixes"], list):
+        core["fixes"] = _dedupe_str_list(raw["fixes"])
+    if "custom_prompts" in raw and isinstance(raw["custom_prompts"], str):
+        prompt = raw["custom_prompts"].strip()
+        if prompt:
+            core["custom_prompts"] = prompt
+    return core
 
 def merge_evolution(skill_dir, new_data_json_str):
     """
@@ -9,52 +69,35 @@ def merge_evolution(skill_dir, new_data_json_str):
     Deduplicates list items.
     """
     evolution_json_path = os.path.join(skill_dir, "evolution.json")
-    
-    # Load existing or create new
-    if os.path.exists(evolution_json_path):
-        try:
-            with open(evolution_json_path, 'r', encoding='utf-8') as f:
-                current_data = json.load(f)
-        except Exception:
-            current_data = {}
-    else:
-        current_data = {}
+
+    current_data = _load_core_data(evolution_json_path)
 
     try:
         new_data = json.loads(new_data_json_str)
+        _validate_new_data_shape(new_data)
     except json.JSONDecodeError as e:
         print(f"Error decoding new data JSON: {e}", file=sys.stderr)
         return False
+    except ValueError as e:
+        print(f"Error validating new evolution data: {e}", file=sys.stderr)
+        return False
 
     # Merge logic
-    # 1. Update timestamp
-    current_data['last_updated'] = datetime.datetime.now().isoformat()
-    
-    # 2. Merge Lists (preferences, fixes, contexts) with deduplication
-    for list_key in ['preferences', 'fixes', 'contexts']:
+    for list_key in ["preferences", "fixes"]:
         if list_key in new_data:
             existing_list = current_data.get(list_key, [])
-            new_items = new_data[list_key]
-            if isinstance(new_items, list):
-                # Simple dedupe by string equality
-                for item in new_items:
-                    if item not in existing_list:
-                        existing_list.append(item)
-                current_data[list_key] = existing_list
-                
-    # 3. Overwrite/Append Custom Prompts (Concatenate if exists to preserve history? Or overwrite?)
-    # Decision: Overwrite if provided, as prompts usually need to be coherent. 
-    # Or, the Agent should have read the old one and combined it before sending here.
-    # We assume Agent sends the FINAL desired state for custom_prompts if it wants to merge.
-    if 'custom_prompts' in new_data:
-        current_data['custom_prompts'] = new_data['custom_prompts']
+            merged = existing_list + new_data[list_key]
+            current_data[list_key] = _dedupe_str_list(merged)
 
-    # 4. Update last_evolved_hash if provided
-    if 'last_evolved_hash' in new_data:
-        current_data['last_evolved_hash'] = new_data['last_evolved_hash']
+    if "custom_prompts" in new_data:
+        prompt = new_data["custom_prompts"].strip()
+        if prompt:
+            current_data["custom_prompts"] = prompt
+        else:
+            current_data.pop("custom_prompts", None)
 
     # Save back
-    with open(evolution_json_path, 'w', encoding='utf-8') as f:
+    with open(evolution_json_path, "w", encoding="utf-8") as f:
         json.dump(current_data, f, indent=2, ensure_ascii=False)
         
     print(f"Successfully merged evolution data for {os.path.basename(skill_dir)}")
@@ -67,4 +110,5 @@ if __name__ == "__main__":
         
     skill_dir = sys.argv[1]
     json_str = sys.argv[2]
-    merge_evolution(skill_dir, json_str)
+    ok = merge_evolution(skill_dir, json_str)
+    sys.exit(0 if ok else 1)
