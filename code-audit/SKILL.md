@@ -20,6 +20,7 @@ description: 基于LSP的智能代码安全审计Skill。利用OpenCode内置LSP
 | `references/report_template.md` | 完整安全审计报告模板 | Phase 7（报告生成）时读取 |
 | `references/evolution_learned.md` | 用户经验沉淀：通用偏好、修复经验 | **始终读取** |
 | `references/web_audit_checks.md` | Web 应用专用检查清单（CSRF、IDOR、时序攻击等） | **条件读取** — 仅当 Phase 0 识别为 Web 项目时 |
+| `references/structured_schemas.md` | 结构化文档 JSON Schema 契约（脚本写入） | 所有结构化文档写入前读取 |
 
 ---
 
@@ -91,6 +92,7 @@ description: 基于LSP的智能代码安全审计Skill。利用OpenCode内置LSP
 ### 工作目录
 
 所有中间结果和最终报告写入 `{repo_root}/out/` 目录。Agent 在 Phase 0 启动时创建该目录。
+默认参数 `repo_root='.'` 时，`out/` 位于当前工作目录。
 
 ### 产物清单
 
@@ -106,6 +108,52 @@ description: 基于LSP的智能代码安全审计Skill。利用OpenCode内置LSP
 | Phase 5 | `out/interaction_matrix.md` | 交互矩阵分析 |
 | Phase 6 | `out/attack_chains.md` | 攻击链组合 |
 | Phase 7 | `out/report.md` | 综合安全审计报告 |
+
+### 文档写入分工（MUST）
+
+- **推理文档（智能体直写）**：
+  - `out/per_source/S{N}_analysis.md`
+  - `out/attack_chains.md`
+  - `out/report.md`
+- **结构化文档（必须脚本写入）**：
+  - `out/project_summary.md`
+  - `out/source_index.md`
+  - `out/sink_index.md`
+  - `out/defense_catalog.md`
+  - `out/progress.md`
+  - `out/findings.md`
+  - `out/interaction_matrix.md`
+- **不在本 Skill 写入范围**：`evolution` 相关文件（由 `skill-evolution-manager` 维护）。
+
+### Structured JSON Schema Contract（MUST）
+
+结构化文档写入前，Agent 必须先构造 JSON payload：
+
+```json
+{
+  "kind": "source_index",
+  "version": "1.0",
+  "generated_at": "2026-03-04T10:30:00Z",
+  "data": {}
+}
+```
+
+- `kind` 必须与脚本参数 `--kind` 一致。
+- 详细字段定义与示例：`references/structured_schemas.md`。
+
+### 写入执行约束（MUST Use Scripts for Structured Docs）
+
+- **禁止** 智能体直接手工写结构化 Markdown 文件。
+- **必须** 调用 `scripts/write_structured_docs.py` 写入结构化文档：
+
+```bash
+python scripts/write_structured_docs.py \
+  --kind <kind> \
+  --input-json <payload.json> \
+  --output-dir ./out
+```
+
+- 推理文档允许智能体直接写。
 ---
 
 ## 5) 核心流程：混合执行模型
@@ -159,6 +207,14 @@ description: 基于LSP的智能代码安全审计Skill。利用OpenCode内置LSP
 3. 使用 `lsp_symbols` 扫描关键文件，获取函数/类/接口列表
 4. 识别项目架构模式
 5. **条件加载**：若识别为 Web 项目 → 读取 `references/web_audit_checks.md`
+6. 构造 `project_summary` payload，并调用脚本写入 `out/project_summary.md`：
+
+```bash
+python scripts/write_structured_docs.py \
+  --kind project_summary \
+  --input-json /tmp/project_summary.json \
+  --output-dir ./out
+```
 
 **项目类型识别启发式**：
 
@@ -208,6 +264,8 @@ description: 基于LSP的智能代码安全审计Skill。利用OpenCode内置LSP
 | S2 | CLI --config | main.py:15 | file_path | 🟡 中 | config_parser |
 | ... | | | | | |
 ```
+
+**落盘（MANDATORY）**：构造 `source_index` payload 后，调用脚本写入 `out/source_index.md`。
 
 
 ---
@@ -275,19 +333,23 @@ description: 基于LSP的智能代码安全审计Skill。利用OpenCode内置LSP
 
 **输出**：`sink_index.md` + `defense_catalog.md`
 
+**落盘（MANDATORY）**：分别构造 `sink_index` 与 `defense_catalog` payload，并调用脚本写入对应文件。
+
 ---
 
 ### Phase 3-4: 逐源深入分析（核心迭代循环）
 
 **这是与传统扫描的核心区别。对每个入口点执行完整的深度子流程，而非批量浅扫。**
 
+> **写入约定**：`write_structured/update_structured` 表示“先生成 payload JSON，再调用 `scripts/write_structured_docs.py`”；`write_reasoning` 表示智能体直接写推理文档。
+
 ```
 源入口列表 = load("source_index.md")  # Phase 1 产出
 全局Sink = load("sink_index.md")       # Phase 2 产出
 全局防御 = load("defense_catalog.md")  # Phase 2 产出
 
-# 初始化进度文件
-write("out/progress.md", 生成初始进度表(源入口列表))  # 所有入口状态="⬼ 待分析"
+# 初始化进度文件（结构化：脚本写入）
+write_structured("progress", 生成初始进度payload(源入口列表))  # 所有入口状态="⬼ 待分析"
 
 for 当前入口 in 源入口列表 (按风险优先级排序):
     
@@ -337,16 +399,16 @@ for 当前入口 in 源入口列表 (按风险优先级排序):
         - 同一函数是否有多个漏洞？
         - 发现新问题 → 记录到当前入口的分析结果中
     
-    # 产出：out/per_source/S{N}_analysis.md
-    write("out/per_source/S{N}_analysis.md", 当前入口分析结果)
+    # 产出：out/per_source/S{N}_analysis.md（推理文档：智能体直写）
+    write_reasoning("out/per_source/S{N}_analysis.md", 当前入口分析结果)
     
-    # ███ 更新进度文件（MANDATORY） ███
-    update("out/progress.md", 当前入口 = "✅ 已完成", 发现漏洞数=N)
+    # ███ 更新进度文件（MANDATORY，结构化：脚本写入） ███
+    update_structured("progress", 当前入口 = "✅ 已完成", 发现漏洞数=N)
 
     # 早停条件（可选）
     if 已分析入口数 >= max_sources:
         # 早停时也必须更新 progress.md，将剩余入口标记为 "⏸ 跳过（达到 max_sources 上限）"
-        update("out/progress.md", 剩余入口 = "⏸ 跳过", 跳过原因="达到 max_sources 上限")
+        update_structured("progress", 剩余入口 = "⏸ 跳过", 跳过原因="达到 max_sources 上限")
         break
 
 end for
@@ -420,7 +482,7 @@ if 已跳过 非空:
 ```
 
 **执行步骤**：
-1. 汇总所有逐源分析的漏洞发现 → `out/findings.md`
+1. 汇总所有逐源分析的漏洞发现，生成 `findings` payload 并调用脚本写入 `out/findings.md`
 2. 收集所有安全特性（如 argon2 慢散列、登录锁定等）
 3. 按严重性排序，取 Top-20 项
 4. 对 Top-20 中的每对 (Vi, Vj) 分析：
@@ -439,6 +501,8 @@ if 已跳过 非空:
 | 枚举 × 账号锁定 | 全站拒绝服务 | 枚举所有用户→逐一触发锁定 |
 
 **输出**：`out/interaction_matrix.md` — 已检查的配对数量、发现的交互数量、每个交互的详细描述。
+
+**落盘（MANDATORY）**：构造 `interaction_matrix` payload 后调用脚本写入。
 
 ---
 
@@ -495,3 +559,9 @@ if 已跳过 非空:
 5. **evidence_score 一致性**：评分是否与证据充分度匹配？
 
 ---
+
+<!-- EVOLUTION_REFERENCE:START -->
+## Evolution Learned Reference
+
+> Evolution data is maintained in `references/evolution_learned.md` by `skill-evolution-manager`.
+<!-- EVOLUTION_REFERENCE:END -->
